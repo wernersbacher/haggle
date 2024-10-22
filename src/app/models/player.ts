@@ -16,8 +16,8 @@ export class Player {
     return (
       this.cards.red +
       this.cards.blue +
-      this.cards.green +
-      this.cards.gold +
+      this.cards.yellow +
+      this.cards.white +
       this.cards.black
     );
   };

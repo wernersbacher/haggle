@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { GameService } from '../game.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { PlayerCards } from '../models/player-cards';
 import { Player } from '../models/player';
 
 @Component({
