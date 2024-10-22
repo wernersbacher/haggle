@@ -37,7 +37,11 @@ export class PlayerInputComponent {
 
   constructor(private formBuilder: FormBuilder) {}
 
-  baseData = [{ name: '' } as PlayerFormData];
+  baseData = [
+    { name: 'Sabine' } as PlayerFormData,
+    { name: 'Ernst' } as PlayerFormData,
+    { name: 'Franzi' } as PlayerFormData,
+  ];
 
   form: FormGroup = this.formBuilder.group({
     players: this.formBuilder.array(
@@ -50,29 +54,24 @@ export class PlayerInputComponent {
     return this.form.get('players') as FormArray;
   }
 
-  addPlayer() {
-    this.players.push(
-      this.formBuilder.group({
-        name: null,
-      })
-    );
+  addPlayer(): void {
+    this.players.push(this.formBuilder.group({ name: '' }));
   }
 
-  startGame() {
-    const playerNames: string[] = this.players.value.map(
-      (value: PlayerFormData) => value.name
-    );
-    this.startGameClicked.emit(playerNames);
+  startGame(): void {
+    if (this.form.valid) {
+      const playerNames = this.players.controls.map(
+        (control) => control.value.name
+      );
+      this.startGameClicked.emit(playerNames);
+    }
   }
 
-  private minimumTwoPlayersValidator(
+  minimumTwoPlayersValidator(
     control: AbstractControl
   ): { [key: string]: boolean } | null {
     const formArray = control as FormArray;
-    const filledPlayers = formArray.controls.filter(
-      (group) => group.get('name')?.value
-    );
-    return filledPlayers.length >= 2 ? null : { minimumTwoPlayers: true };
+    return formArray.length >= 2 ? null : { minPlayers: true };
   }
 }
 

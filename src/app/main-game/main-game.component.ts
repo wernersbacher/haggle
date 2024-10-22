@@ -19,13 +19,13 @@ import { GameRulesComponent } from '../game-rules/game-rules.component';
 
     <app-game-rules
       *ngIf="gameStarted"
-      [rules]="gameService.players"
+      [players]="gameService.players"
     ></app-game-rules>
   `,
   styleUrl: './main-game.component.css',
 })
 export class MainGameComponent {
-  constructor(private gameService: GameService) {}
+  constructor(public gameService: GameService) {}
 
   get gameStarted() {
     return this.gameService.isGameStarted();
