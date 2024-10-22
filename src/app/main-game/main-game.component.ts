@@ -2,20 +2,25 @@ import { CommonModule } from '@angular/common';
 import { GameService } from './../game.service';
 import { Component } from '@angular/core';
 import { PlayerInputComponent } from '../player-input/player-input.component';
+import { GameRulesComponent } from '../game-rules/game-rules.component';
 
 @Component({
   selector: 'app-main-game',
   standalone: true,
-  imports: [CommonModule, PlayerInputComponent],
+  imports: [CommonModule, PlayerInputComponent, GameRulesComponent],
   template: `
-    <div>
-      <h2>Haggle</h2>
-      <app-player-input
-        *ngIf="!gameStarted"
-        (startGameClicked)="onGameStartClicked($event)"
-      >
-      </app-player-input>
-    </div>
+    <h2>Haggle</h2>
+
+    <app-player-input
+      *ngIf="!gameStarted"
+      (startGameClicked)="onGameStartClicked($event)"
+    >
+    </app-player-input>
+
+    <app-game-rules
+      *ngIf="gameStarted"
+      [rules]="gameService.players"
+    ></app-game-rules>
   `,
   styleUrl: './main-game.component.css',
 })
