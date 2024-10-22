@@ -194,7 +194,7 @@ export const RULES: Rule[] = [
       'Jeweils 3 blaue Karten vervierfachen den Wert einer orangefarbenen Karte',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
       if (cards.blue >= 3) {
-        const value = Math.floor(cards.blue / 3) * (cards.orange * 4);
+        const value = Math.floor(cards.blue / 3) * BASIC_VALUES.orange * 4;
         return { operation: 'add', value, event: 'points' };
       }
       return { operation: 'add', value: 0, event: 'points' };

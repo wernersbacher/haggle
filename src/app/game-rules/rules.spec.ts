@@ -600,6 +600,7 @@ describe('RULES', () => {
       { yellow: 1, white: 2, points: 0 },
       { yellow: 2, white: 2, points: 5 },
       { yellow: 5, white: 4, points: 10 },
+      { yellow: 5, white: 1, points: 5 },
     ].forEach((args) => {
       it(`should double every white, ${args.yellow} yellow and ${args.white} whites`, () => {
         // Arrange
@@ -609,6 +610,51 @@ describe('RULES', () => {
           red: 0,
           blue: 0,
           orange: 0,
+        });
+
+        // Act
+        const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+        // Assert
+        expect(result.operation).toBe('add');
+        expect(result.event).toBe('points');
+        expect(result.value).toBe(args.points);
+      });
+    });
+  });
+
+  describe('rule14 2 blues 4x oranges', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule14')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+    [
+      { blue: 0, orange: 2, points: 0 },
+      { blue: 1, orange: 2, points: 0 },
+      { blue: 3, orange: 2, points: 16 },
+      { blue: 7, orange: 5, points: 32 },
+      { blue: 7, orange: 1, points: 16 },
+    ].forEach((args) => {
+      it(`should double every orange, ${args.blue} blue and ${args.orange} oranges`, () => {
+        // Arrange
+        playerCards = getPlayerCards({
+          blue: args.blue,
+          orange: args.orange,
+          red: 0,
+          yellow: 0,
+          white: 0,
         });
 
         // Act
