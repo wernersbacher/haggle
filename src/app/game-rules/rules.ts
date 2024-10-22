@@ -89,10 +89,6 @@ export const RULES: Rule[] = [
       const otherCardsYellow = otherCards.map((p) => p.yellow);
 
       const { highest, highestUnique } = findHighestNumbers(otherCardsYellow);
-      const secondMaxOtherYellow = otherCards
-        .map((p) => p.yellow)
-        .filter((y) => y < highest)
-        .reduce((max, y) => Math.max(max, y), 0);
 
       if (cards.yellow === highest || cards.yellow === 0) {
         // failed - other one has same amount of cards as you
@@ -155,7 +151,7 @@ export const RULES: Rule[] = [
         cards.white,
       ];
       colors.sort((a, b) => b - a);
-      if (colors.toString() === [4, 3, 2, 1].toString()) {
+      if (colors.toString() === [4, 3, 2, 1, 0].toString()) {
         return { operation: 'multiply', value: 2, event: 'points' };
       }
       return { operation: 'multiply', value: 1, event: 'points' };
@@ -166,13 +162,19 @@ export const RULES: Rule[] = [
     description:
       'Der Spieler mit den meisten roten Karten verdoppelt ihren Wert',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      const maxRed = Math.max(...otherCards.map((p) => p.red));
-      // TODO: Check if the max player is "alone" with the max number
-      if (cards.red === maxRed) {
-        const value = cards.red * 2;
-        return { operation: 'add', value, event: 'points' };
+      const otherCardsRed = otherCards.map((p) => p.red);
+
+      const { highest, highestUnique } = findHighestNumbers(otherCardsRed);
+
+      if (cards.red === highest || cards.red === 0) {
+        // failed - other one has same amount of cards as you
+        return { operation: 'multiply', value: 1, event: 'bonus' };
       }
-      return { operation: 'add', value: 0, event: 'points' };
+      if (cards.red > highest) {
+        // first case - just highest number of red
+        return { operation: 'multiply', value: 2, event: 'bonus' };
+      }
+      return { operation: 'multiply', value: 1, event: 'bonus' };
     },
   },
   {

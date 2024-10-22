@@ -424,6 +424,145 @@ describe('RULES', () => {
     });
   });
 
+  describe('rule10 disqualitfy when 7 cards of one color', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule10')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+
+    it('should get points for sets of five colors', () => {
+      playerCards = getPlayerCards({ red: 1, blue: 2, yellow: 3, orange: 1, white: 4});
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(10);
+    });
+  });
+
+  describe('rule11 double for pyramide', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule11')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no multi', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('multiply');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(1);
+    });
+
+    it('should multiply by 2 for pyramide', () => {
+      playerCards = getPlayerCards({ red: 4, blue: 2, yellow: 3, orange: 1, white: 0});
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('multiply');
+      expect(result.value).toBe(2);
+    });
+    it('should not multiply by 2 for unperfect pyramide', () => {
+      playerCards = getPlayerCards({ red: 4, blue: 2, yellow: 3, orange: 1, white: 1});
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('multiply');
+      expect(result.value).toBe(1);
+    });
+  });
+
+  describe('rule12 unique most red doubles', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule12')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('multiply');
+      expect(result.value).toBe(1);
+    });
+
+    it('should give the bonus to the player with the most yellow cards', () => {
+      playerCards.red = 5;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 3, yellow: 0, blue: 0, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 0, orange: 0, white: 0 })
+      );
+
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('multiply');
+      expect(result.event).toBe('bonus');
+      expect(result.value).toBe(2); 
+    });
+
+    it('should NOT give the bonus to the player when same amount', () => {
+      playerCards.red = 5;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 5, yellow: 0, blue: 0, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 0, orange: 0, white: 0 })
+      );
+
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('multiply');
+      expect(result.event).toBe('bonus');
+      expect(result.value).toBe(1); 
+    });
+
+
+    it('should NOT give the bonus to the player when others is higher', () => {
+      playerCards.red = 2;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 4, yellow: 0, blue: 0, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 0, orange: 0, white: 0 })
+      );
+
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('multiply');
+      expect(result.event).toBe('bonus');
+      expect(result.value).toBe(1); 
+    });
+  });
+
+
+
   xit('should evaluate rule13 correctly', () => {
     const rule = RULES.find((r) => r.shortname === 'rule13');
     if (rule) {
