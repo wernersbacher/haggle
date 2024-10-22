@@ -167,6 +167,157 @@ describe('RULES', () => {
     });
   });
 
+  describe('rule5 orange <= blue', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule5')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+    [
+      { orange: 0, blue: 2 },
+      { orange: 1, blue: 2 },
+      { orange: 2, blue: 2 },
+    ].forEach((args) => {
+      it(`should not substract orange if less than blues ${args.orange} <= ${args.blue}`, () => {
+        // Arrange
+        playerCards.orange = args.orange;
+        playerCards.blue = args.blue;
+
+        // Act
+        const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+        // Assert
+        expect(result.operation).toBe('add');
+        expect(result.event).toBe('points');
+        expect(result.value).toBe(0);
+      });
+    });
+
+    it('should substract orange points if more than blues exist', () => {
+      // Arrange
+      playerCards.orange = 4;
+      playerCards.blue = 3;
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(-4);
+    });
+  });
+
+  describe('rule6 and rule7, other player has 5 blue cards', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule6_rule7')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+
+    it('losing ten points if other player has 5 blue cards', () => {
+      // Arrange
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 5, orange: 0, white: 0 })
+      );
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(-10);
+    });
+
+    it('losing 30 points if 3 other player have 5 blue cards', () => {
+      // Arrange
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 5, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 8, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 3, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 6, orange: 0, white: 0 })
+      );
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(-30);
+    });
+
+    it('losing no points when having 3 red cards and other player has 5 blue cards', () => {
+      // Arrange
+      playerCards.red = 3;
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 5, orange: 0, white: 0 })
+      );
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0);
+    });
+
+    it('losing no points when having 3 red cards and several other players have 5 blue cards', () => {
+      // Arrange
+      playerCards.red = 4;
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 5, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 8, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 3, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 0, blue: 6, orange: 0, white: 0 })
+      );
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0);
+    });
+  });
+
   xit('should evaluate rule13 correctly', () => {
     const rule = RULES.find((r) => r.shortname === 'rule13');
     if (rule) {

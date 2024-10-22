@@ -63,35 +63,28 @@ export const RULES: Rule[] = [
     },
   },
   {
-    shortname: 'rule6',
+    shortname: 'rule6_rule7',
     description:
-      'Wenn ein Spieler 5 oder mehr blaue Karten hat, werden anderen Spielern 10 Punkte abgezogen',
+      'Wenn ein Spieler 5 oder mehr blaue Karten hat, werden anderen Spielern 10 Punkte abgezogen, außer er hat min. 3 rote Karten',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      if (cards.blue >= 5) {
-        for (let otherPlayer of otherCards) {
-          if (otherPlayer !== cards) {
-            // In einem realen Fall würde dies die anderen Spieler beeinflussen
-            // TODO bei sich nichts machen
-            // hier müssen die schutzkarten grpüft werden und geguckt werden ob jemand andere die 10 punkte hat
+      let totalPointsDeducted = 0;
+      if (cards.red < 3) {
+        otherCards.forEach((player) => {
+          if (player.blue >= 5) {
+            totalPointsDeducted -= 10;
           }
-        }
+        });
       }
-      return { operation: 'add', value: 0, event: 'points' };
-    },
-  },
-  {
-    shortname: 'rule7',
-    description:
-      'Set von 3 roten Karten schützt vor einem Set von 5 blauen (keine Punktevergabe, diese Regel betrifft Schutzmechanismen)',
-    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      // TODO
-      return { operation: 'add', value: 0, event: 'protection' };
+
+      // Return the result with the total points deducted
+      return { operation: 'add', value: totalPointsDeducted, event: 'points' };
     },
   },
   {
     shortname: 'rule8',
     description:
       'Der Spieler mit den meisten gelben Karten bekommt Bonuspunkte',
+    // TODO nochmal genau gucken
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
       const maxYellow = Math.max(...otherCards.map((p) => p.yellow));
       if (cards.yellow === maxYellow) {
