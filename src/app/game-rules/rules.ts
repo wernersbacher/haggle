@@ -1,8 +1,6 @@
 import { CardColors, PlayerCards } from '../models/player-cards';
 import { Rule } from './../models/rule';
 
-// TODO: Return value types/events
-
 // calculated from ruleset
 const BASIC_VALUES: CardColors = {
   red: 3,
@@ -12,151 +10,198 @@ const BASIC_VALUES: CardColors = {
   white: 5,
 };
 
-function rule1(player: PlayerCards): number {
-  // Regel 1: Orange-Karten haben einen Basiswert von 4
-  return player.orange * BASIC_VALUES.orange;
-}
-
-function rule2(player: PlayerCards): number {
-  // Regel 2: Weiße Karten haben die höchste Wertigkeit und sind gleichwertig mit einer roten und einer blauen Karte
-  return player.white * BASIC_VALUES.white;
-}
-
-function rule3(player: PlayerCards): number {
-  // Regel 3: Blaue Karten haben doppelt so viel Wert wie gelbe und halb so viel wie orange
-  return player.blue * BASIC_VALUES.blue;
-}
-
-function rule4(player: PlayerCards): number {
-  // Regel 4: Wenn mehr als 3 weiße Karten, verlieren alle weißen Karten ihren Wert
-  if (player.white > 3) {
-    return -player.white * BASIC_VALUES.white;
-  }
-  return 0;
-}
-
-function rule5(player: PlayerCards): number {
-  // Regel 5: Ein Spieler kann nur so viele Orange-Karten zählen, wie er blaue hat
-  if (player.orange > player.blue) {
-    return -(player.orange - player.blue) * BASIC_VALUES.orange;
-  }
-  return 0;
-}
-
-function rule6(player: PlayerCards, otherPlayers: PlayerCards[]): number {
-  // Regel 6: Wenn ein Spieler 5 oder mehr blaue Karten hat, werden anderen Spielern 10 Punkte abgezogen
-  if (player.blue >= 5) {
-    for (let otherPlayer of otherPlayers) {
-      if (otherPlayer !== player) {
-        // In einem realen Fall würde dies die anderen Spieler beeinflussen
-        // TODO bei sich nichts machen
-        // hier müssen die schutzkarten grpüft werden und geguckt werden ob jemand andere die 10 punkte hat
+export const RULES: Rule[] = [
+  {
+    shortname: 'rule1',
+    description: 'Orange-Karten haben einen Basiswert von 4',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const value = cards.orange * BASIC_VALUES.orange;
+      return { operation: 'add', value, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule2',
+    description:
+      'Weiße Karten haben die höchste Wertigkeit und sind gleichwertig mit einer roten und einer blauen Karte',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const value = cards.white * BASIC_VALUES.white;
+      return { operation: 'add', value, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule3',
+    description:
+      'Blaue Karten haben doppelt so viel Wert wie gelbe und halb so viel wie orange',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const value = cards.blue * BASIC_VALUES.blue;
+      return { operation: 'add', value, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule4',
+    description:
+      'Wenn mehr als 3 weiße Karten, verlieren alle weißen Karten ihren Wert',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      if (cards.white > 3) {
+        const value = -cards.white * BASIC_VALUES.white;
+        return { operation: 'add', value, event: 'points' };
       }
-    }
-  }
-  return 0;
-}
-
-function rule7(player: PlayerCards): number {
-  // Regel 7: Set von 3 roten Karten schützt vor einem Set von 5 blauen
-  // (keine Punktevergabe, diese Regel betrifft Schutzmechanismen)
-  // TODO
-  return 0;
-}
-
-function rule8(player: PlayerCards, otherPlayers: PlayerCards[]): number {
-  // Regel 8: Der Spieler mit den meisten gelben Karten bekommt Bonuspunkte
-  // TODO: Check if the max player is "alone" with the max number
-  const maxYellow = Math.max(...otherPlayers.map((p) => p.yellow));
-  if (player.yellow === maxYellow) {
-    return player.yellow ** 2;
-  }
-  return 0;
-}
-
-function rule9(player: PlayerCards): number {
-  // Regel 9: Wenn ein Spieler 7 oder mehr Karten derselben Farbe hat, wird er disqualifiziert
-  if (
-    player.red >= 7 ||
-    player.blue >= 7 ||
-    player.yellow >= 7 ||
-    player.orange >= 7 ||
-    player.white >= 7
-  ) {
-    return -Infinity; // disqualifiziert
-    // TODO: throw disqualified event
-  }
-  return 0;
-}
-
-function rule10(player: PlayerCards): number {
-  // Regel 10: Jedes Set von 5 verschiedenen Farben gibt 10 Punkte
-  return (
-    Math.min(
-      player.red,
-      player.blue,
-      player.yellow,
-      player.orange,
-      player.white
-    ) * 10
-  );
-}
-
-function rule11(player: PlayerCards): number {
-  // Regel 11: "Pyramide" (4-3-2-1 Karten) verdoppelt den Wert
-  const colors = [
-    player.red,
-    player.blue,
-    player.yellow,
-    player.orange,
-    player.white,
-  ];
-  colors.sort((a, b) => b - a);
-  if (colors.toString() === [4, 3, 2, 1].toString()) {
-    return 2; // multiplikator
-  }
-  return 1;
-}
-
-function rule12(player: PlayerCards, otherPlayers: PlayerCards[]): number {
-  // Regel 12: Der Spieler mit den meisten roten Karten verdoppelt ihren Wert
-  // TODO: Check if the max player is "alone" with the max number
-  //
-  const maxRed = Math.max(...otherPlayers.map((p) => p.red));
-  if (player.red === maxRed) {
-    return player.red * 2;
-  }
-  return 0;
-}
-
-function rule13(player: PlayerCards): number {
-  // Regel 13: Jeweils zwei gelbe Karten verdoppeln eine weiße Karte
-  // TODO: doubling the value is not working like this - first iteration: change values for specific player?
-  if (player.yellow >= 2) {
-    return Math.floor(player.yellow / 2) * (player.white * 2);
-  }
-  return 0;
-}
-
-function rule14(player: PlayerCards): number {
-  // Regel 14: Jeweils 3 blaue Karten vervierfachen den Wert einer orangefarbenen Karte
-  // wie rule 13
-  if (player.blue >= 3) {
-    return Math.floor(player.blue / 3) * (player.orange * 4);
-  }
-  return 0;
-}
-
-function rule15(player: PlayerCards): number {
-  // Regel 15: Es dürfen nicht mehr als 13 Karten gewertet werden
-  const totalCards =
-    player.red + player.blue + player.yellow + player.orange + player.white;
-  if (totalCards > 13) {
-    // TODO: remove too many cards
-    return -(totalCards - 13); // Beispielhafte Abwertung für Karten über 13
-  }
-  return 0;
-}
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule5',
+    description:
+      'Ein Spieler kann nur so viele Orange-Karten zählen, wie er blaue hat',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      if (cards.orange > cards.blue) {
+        const value = -(cards.orange - cards.blue) * BASIC_VALUES.orange;
+        return { operation: 'add', value, event: 'points' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule6',
+    description:
+      'Wenn ein Spieler 5 oder mehr blaue Karten hat, werden anderen Spielern 10 Punkte abgezogen',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      if (cards.blue >= 5) {
+        for (let otherPlayer of otherCards) {
+          if (otherPlayer !== cards) {
+            // In einem realen Fall würde dies die anderen Spieler beeinflussen
+            // TODO bei sich nichts machen
+            // hier müssen die schutzkarten grpüft werden und geguckt werden ob jemand andere die 10 punkte hat
+          }
+        }
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule7',
+    description:
+      'Set von 3 roten Karten schützt vor einem Set von 5 blauen (keine Punktevergabe, diese Regel betrifft Schutzmechanismen)',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      // TODO
+      return { operation: 'add', value: 0, event: 'protection' };
+    },
+  },
+  {
+    shortname: 'rule8',
+    description:
+      'Der Spieler mit den meisten gelben Karten bekommt Bonuspunkte',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const maxYellow = Math.max(...otherCards.map((p) => p.yellow));
+      if (cards.yellow === maxYellow) {
+        const value = cards.yellow ** 2;
+        return { operation: 'add', value, event: 'bonus' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule9',
+    description:
+      'Wenn ein Spieler 7 oder mehr Karten derselben Farbe hat, wird er disqualifiziert',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      if (
+        cards.red >= 7 ||
+        cards.blue >= 7 ||
+        cards.yellow >= 7 ||
+        cards.orange >= 7 ||
+        cards.white >= 7
+      ) {
+        return { operation: 'add', value: -Infinity, event: 'disqualified' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule10',
+    description: 'Jedes Set von 5 verschiedenen Farben gibt 10 Punkte',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const value =
+        Math.min(
+          cards.red,
+          cards.blue,
+          cards.yellow,
+          cards.orange,
+          cards.white
+        ) * 10;
+      return { operation: 'add', value, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule11',
+    description: '"Pyramide" (4-3-2-1 Karten) verdoppelt den Wert',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const colors = [
+        cards.red,
+        cards.blue,
+        cards.yellow,
+        cards.orange,
+        cards.white,
+      ];
+      colors.sort((a, b) => b - a);
+      if (colors.toString() === [4, 3, 2, 1].toString()) {
+        return { operation: 'multiply', value: 2, event: 'points' };
+      }
+      return { operation: 'multiply', value: 1, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule12',
+    description:
+      'Der Spieler mit den meisten roten Karten verdoppelt ihren Wert',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const maxRed = Math.max(...otherCards.map((p) => p.red));
+      // TODO: Check if the max player is "alone" with the max number
+      if (cards.red === maxRed) {
+        const value = cards.red * 2;
+        return { operation: 'add', value, event: 'points' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule13',
+    description: 'Jeweils zwei gelbe Karten verdoppeln eine weiße Karte',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      // TODO: doubling the value is not working like this - first iteration: change values for specific player?
+      if (cards.yellow >= 2) {
+        const value = Math.floor(cards.yellow / 2) * (cards.white * 2);
+        return { operation: 'add', value, event: 'points' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule14',
+    description:
+      'Jeweils 3 blaue Karten vervierfachen den Wert einer orangefarbenen Karte',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      if (cards.blue >= 3) {
+        const value = Math.floor(cards.blue / 3) * (cards.orange * 4);
+        return { operation: 'add', value, event: 'points' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+  {
+    shortname: 'rule15',
+    description: 'Es dürfen nicht mehr als 13 Karten gewertet werden',
+    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
+      const totalCards =
+        cards.red + cards.blue + cards.yellow + cards.orange + cards.white;
+      if (totalCards > 13) {
+        // TODO: Remove card randomly
+        return { operation: 'add', value: -(totalCards - 13), event: 'points' };
+      }
+      return { operation: 'add', value: 0, event: 'points' };
+    },
+  },
+];
 
 function calculateTotalPoints(
   player: PlayerCards,
@@ -168,21 +213,21 @@ function calculateTotalPoints(
 
   // loopen durch alle Regeln und methoden anwenden
 
-  points += rule1(player);
-  points += rule2(player);
-  points += rule3(player);
-  points += rule4(player);
-  points += rule5(player);
-  points += rule6(player, otherPlayers);
-  points += rule7(player);
-  points += rule8(player, otherPlayers);
-  points += rule9(player);
-  points += rule10(player);
-  points *= rule11(player); // Multiplikator für Regel 11
-  points += rule12(player, otherPlayers);
-  points += rule13(player);
-  points += rule14(player);
-  points += rule15(player);
+  for (let rule of RULES) {
+    let result: RuleResult = rule.evaluate(player, otherPlayers);
+
+    if (result.event === 'points') {
+      if (result.operation === 'add') {
+        points += result.value;
+      } else if (result.operation === 'multiply') {
+        points *= result.value;
+      }
+    } else if (result.event === 'bonus') {
+      points += result.value;
+    } else if (result.event === 'disqualified') {
+      return -Infinity;
+    }
+  }
 
   return points;
 }
