@@ -1,48 +1,36 @@
 import { Injectable } from '@angular/core';
 import { PlayerCards } from './models/player-cards';
-import { Rule } from './models/rule';
 import { Player } from './models/player';
+import { RULES } from './game-rules/rules';
+import Rand from 'rand-seed';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class GameService {
-  rules: Rule[] = [
-    {
-      description: 'Red cards are worth 5 points each',
-      evaluate: (cards: PlayerCards) => cards.red * 5,
-    },
-    {
-      description:
-        'Blue cards are worth 2 points, but two blue cards are worth 6 points each',
-      evaluate: (cards: PlayerCards) =>
-        cards.blue >= 2 ? cards.blue * 6 : cards.blue * 2,
-    },
-    {
-      description:
-        'Green cards are worth 1 point each, but three green cards are worth 15 points total',
-      evaluate: (cards: PlayerCards) =>
-        cards.green >= 3 ? 15 : cards.green * 1,
-    },
-    {
-      description:
-        'Gold cards are worth 10 points, but each gold card deducts 3 points per other card',
-      evaluate: (cards: PlayerCards) =>
-        cards.gold * 10 -
-        cards.gold * 3 * (this.countCards(cards) - cards.gold),
-    },
-    {
-      description:
-        'A set of 1 red, 1 blue, and 1 green card gives a 10 point bonus',
-      evaluate: (cards: PlayerCards) =>
-        Math.min(cards.red, cards.blue, cards.green) * 10,
-    },
-    {
-      description:
-        'Black cards are worth 0, unless you have at least 2, then they are worth 20 points total',
-      evaluate: (cards: PlayerCards) => (cards.black >= 2 ? 20 : 0),
-    },
-  ];
+  seed: string = '';
+  players: Player[] = [];
+
+  startGame(playerNames: string[], seed: string = '') {
+    // Generate or get seed for rules
+    if (seed === '') {
+      seed = this.generateRandomSeed();
+    }
+    this.seed = seed;
+
+    // generate player objects
+    this.players = [];
+    for (let name of playerNames) {
+      let player = this.generatePlayer(name);
+      this.players.push(player);
+    }
+  }
+
+  isGameStarted() {
+    return this.players.length > 0;
+  }
+
+  generateRandomSeed() {
+    return Math.random().toString(36).substring(2, 15);
+  }
 
   generatePlayer(name: string) {
     let rules = this.shuffleAndPickRules(3);
@@ -52,8 +40,9 @@ export class GameService {
   }
 
   private shuffleAndPickRules(number: number) {
-    // todo: depending on the number of rules and players
-    let shuffled = this.rules.sort(() => 0.5 - Math.random());
+    const rand = new Rand(this.seed);
+    const first_number = rand.next();
+    let shuffled = RULES.sort(() => 0.5 - first_number);
     return shuffled.slice(0, number);
   }
 

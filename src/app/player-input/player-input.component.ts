@@ -1,41 +1,81 @@
-import { Component } from '@angular/core';
-import { GameService } from '../game.service';
-import { Rule } from '../models/rule';
+import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { GameRulesComponent } from '../game-rules/game-rules.component';
-
-/*
-TODO:
-  * generieren mit seed -> selbe regeln ziehen
-*/
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-player-input',
   standalone: true,
-  imports: [CommonModule, FormsModule, GameRulesComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
     <div>
-      <h2>Set Player Count</h2>
-      <input min="3" type="number" [(ngModel)]="playerCount" />
-      <button (click)="startGame()">Start Game</button>
-    </div>
-
-    <div>
-      <h2>Game Rules for Player</h2>
-      <ul>
-        <li *ngFor="let rule of rules">{{ rule.description }}</li>
-      </ul>
+      <form [formGroup]="form">
+        <button type="button" (click)="addPlayer()">Add</button>
+        <ng-container
+          formArrayName="players"
+          *ngFor="let player of players.controls; index as i"
+          ><p>
+            Player {{ i + 1 }}
+            <ng-container [formGroupName]="i">
+              <input formControlName="name" />
+            </ng-container>
+          </p>
+        </ng-container>
+      </form>
+      <button (click)="startGame()" [disabled]="!form.valid">Start Game</button>
     </div>
   `,
 })
 export class PlayerInputComponent {
-  playerCount: number = 0;
-  rules: Rule[][] | undefined = undefined;
+  @Output() startGameClicked = new EventEmitter<string[]>();
 
-  constructor(private gameService: GameService) {}
+  constructor(private formBuilder: FormBuilder) {}
+
+  baseData = [{ name: '' } as PlayerFormData];
+
+  form: FormGroup = this.formBuilder.group({
+    players: this.formBuilder.array(
+      this.baseData.map((player) => this.formBuilder.group(player)),
+      [this.minimumTwoPlayersValidator]
+    ),
+  });
+
+  get players(): FormArray {
+    return this.form.get('players') as FormArray;
+  }
+
+  addPlayer() {
+    this.players.push(
+      this.formBuilder.group({
+        name: null,
+      })
+    );
+  }
 
   startGame() {
-    this.rules = this.gameService.generateRules(this.playerCount);
+    const playerNames: string[] = this.players.value.map(
+      (value: PlayerFormData) => value.name
+    );
+    this.startGameClicked.emit(playerNames);
   }
+
+  private minimumTwoPlayersValidator(
+    control: AbstractControl
+  ): { [key: string]: boolean } | null {
+    const formArray = control as FormArray;
+    const filledPlayers = formArray.controls.filter(
+      (group) => group.get('name')?.value
+    );
+    return filledPlayers.length >= 2 ? null : { minimumTwoPlayers: true };
+  }
+}
+
+interface PlayerFormData {
+  name: string;
 }
