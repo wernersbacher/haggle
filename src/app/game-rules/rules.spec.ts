@@ -394,6 +394,36 @@ describe('RULES', () => {
     });
   });
 
+  describe('rule9 disqualitfy when 7 cards of one color', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule9')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+
+    it('should disqualify player when 7 cards of one color', () => {
+      playerCards.red = 7;
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.event).toBe('disqualified');
+      expect(result.value).toBe(-Infinity);
+    });
+  });
+
   xit('should evaluate rule13 correctly', () => {
     const rule = RULES.find((r) => r.shortname === 'rule13');
     if (rule) {
