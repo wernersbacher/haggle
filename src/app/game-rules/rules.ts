@@ -181,9 +181,8 @@ export const RULES: Rule[] = [
     shortname: 'rule13',
     description: 'Jeweils zwei gelbe Karten verdoppeln eine weiße Karte',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      // TODO: doubling the value is not working like this - first iteration: change values for specific player?
       if (cards.yellow >= 2) {
-        const value = Math.floor(cards.yellow / 2) * (cards.white * 2);
+        const value = Math.floor(cards.yellow / 2) * BASIC_VALUES.white;
         return { operation: 'add', value, event: 'points' };
       }
       return { operation: 'add', value: 0, event: 'points' };

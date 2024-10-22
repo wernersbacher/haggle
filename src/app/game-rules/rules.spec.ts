@@ -443,7 +443,13 @@ describe('RULES', () => {
     });
 
     it('should get points for sets of five colors', () => {
-      playerCards = getPlayerCards({ red: 1, blue: 2, yellow: 3, orange: 1, white: 4});
+      playerCards = getPlayerCards({
+        red: 1,
+        blue: 2,
+        yellow: 3,
+        orange: 1,
+        white: 4,
+      });
 
       // Act
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
@@ -473,7 +479,13 @@ describe('RULES', () => {
     });
 
     it('should multiply by 2 for pyramide', () => {
-      playerCards = getPlayerCards({ red: 4, blue: 2, yellow: 3, orange: 1, white: 0});
+      playerCards = getPlayerCards({
+        red: 4,
+        blue: 2,
+        yellow: 3,
+        orange: 1,
+        white: 0,
+      });
 
       // Act
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
@@ -483,7 +495,13 @@ describe('RULES', () => {
       expect(result.value).toBe(2);
     });
     it('should not multiply by 2 for unperfect pyramide', () => {
-      playerCards = getPlayerCards({ red: 4, blue: 2, yellow: 3, orange: 1, white: 1});
+      playerCards = getPlayerCards({
+        red: 4,
+        blue: 2,
+        yellow: 3,
+        orange: 1,
+        white: 1,
+      });
 
       // Act
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
@@ -524,7 +542,7 @@ describe('RULES', () => {
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
       expect(result.operation).toBe('multiply');
       expect(result.event).toBe('bonus');
-      expect(result.value).toBe(2); 
+      expect(result.value).toBe(2);
     });
 
     it('should NOT give the bonus to the player when same amount', () => {
@@ -540,9 +558,8 @@ describe('RULES', () => {
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
       expect(result.operation).toBe('multiply');
       expect(result.event).toBe('bonus');
-      expect(result.value).toBe(1); 
+      expect(result.value).toBe(1);
     });
-
 
     it('should NOT give the bonus to the player when others is higher', () => {
       playerCards.red = 2;
@@ -557,39 +574,51 @@ describe('RULES', () => {
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
       expect(result.operation).toBe('multiply');
       expect(result.event).toBe('bonus');
-      expect(result.value).toBe(1); 
+      expect(result.value).toBe(1);
     });
   });
 
+  describe('rule13 2 yellows double every white', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule13')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
 
-
-  xit('should evaluate rule13 correctly', () => {
-    const rule = RULES.find((r) => r.shortname === 'rule13');
-    if (rule) {
+      // Act
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
       expect(result.operation).toBe('add');
       expect(result.event).toBe('points');
-      expect(result.value).toBe(2); // 4 yellow cards -> 2 pairs -> 2 * (1 white * 2) = 2
-    }
-  });
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+    [
+      { yellow: 0, white: 2, points: 0 },
+      { yellow: 1, white: 2, points: 0 },
+      { yellow: 2, white: 2, points: 5 },
+      { yellow: 5, white: 4, points: 10 },
+    ].forEach((args) => {
+      it(`should double every white, ${args.yellow} yellow and ${args.white} whites`, () => {
+        // Arrange
+        playerCards = getPlayerCards({
+          yellow: args.yellow,
+          white: args.white,
+          red: 0,
+          blue: 0,
+          orange: 0,
+        });
 
-  xit('should evaluate rule14 correctly', () => {
-    const rule = RULES.find((r) => r.shortname === 'rule14');
-    if (rule) {
-      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
-      expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
-      expect(result.value).toBe(4); // 3 blue cards -> 1 pair -> 1 * (1 orange * 4) = 4
-    }
-  });
+        // Act
+        const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
 
-  xit('should evaluate rule15 correctly', () => {
-    const rule = RULES.find((r) => r.shortname === 'rule15');
-    if (rule) {
-      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
-      expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
-      expect(result.value).toBe(-1); // total cards = 11, no penalty
-    }
+        // Assert
+        expect(result.operation).toBe('add');
+        expect(result.event).toBe('points');
+        expect(result.value).toBe(args.points);
+      });
+    });
   });
 });
