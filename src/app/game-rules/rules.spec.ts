@@ -318,6 +318,82 @@ describe('RULES', () => {
     });
   });
 
+  describe('rule8 most yellow', () => {
+    beforeEach(() => {
+      rule = RULES.find((r) => r.shortname === 'rule8')!;
+      playerCards = new PlayerCards();
+      otherPlayers = [];
+    });
+    it('empty cards should have no points', () => {
+      // Arrange
+
+      // Act
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+
+      // Assert
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0); // no cards -> no points
+    });
+
+    it('should give the bonus to the player with the most yellow cards', () => {
+      playerCards.yellow = 5;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 3, blue: 0, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 2, blue: 0, orange: 0, white: 0 })
+      );
+
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('bonus');
+      expect(result.value).toBe(25); // 5 yellow cards, bonus is 5^2 = 25
+    });
+
+    it('should NOT give the bonus to the player when same amount', () => {
+      playerCards.yellow = 5;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 5, blue: 0, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 4, blue: 0, orange: 0, white: 0 })
+      );
+
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
+    });
+
+    it('should give the bonus to the player when others max is same', () => {
+      playerCards.yellow = 3;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 5, blue: 0, orange: 0, white: 0 })
+      );
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 5, blue: 0, orange: 0, white: 0 })
+      );
+
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('add');
+      expect(result.event).toBe('bonus');
+      expect(result.value).toBe(9);
+    });
+
+    it('should NOT give the bonus to the player when others is higher', () => {
+      playerCards.yellow = 3;
+
+      otherPlayers.push(
+        getPlayerCards({ red: 0, yellow: 5, blue: 0, orange: 0, white: 0 })
+      );
+      const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
+    });
+  });
+
   xit('should evaluate rule13 correctly', () => {
     const rule = RULES.find((r) => r.shortname === 'rule13');
     if (rule) {

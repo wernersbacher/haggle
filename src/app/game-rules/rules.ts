@@ -1,3 +1,4 @@
+import { findHighestNumbers } from '../helper/find-highest';
 import { CardColors, PlayerCards } from '../models/player-cards';
 import { Rule } from './../models/rule';
 import { RuleResult } from './rules-types';
@@ -83,11 +84,27 @@ export const RULES: Rule[] = [
   {
     shortname: 'rule8',
     description:
-      'Der Spieler mit den meisten gelben Karten bekommt Bonuspunkte',
-    // TODO nochmal genau gucken
+      'Der Spieler mit den meisten gelben Karten bekommt Bonuspunkte, außer jemand andere hat allein mehr gelbe Karten',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      const maxYellow = Math.max(...otherCards.map((p) => p.yellow));
-      if (cards.yellow === maxYellow) {
+      const otherCardsYellow = otherCards.map((p) => p.yellow);
+
+      const { highest, highestUnique } = findHighestNumbers(otherCardsYellow);
+      const secondMaxOtherYellow = otherCards
+        .map((p) => p.yellow)
+        .filter((y) => y < highest)
+        .reduce((max, y) => Math.max(max, y), 0);
+
+      if (cards.yellow === highest || cards.yellow === 0) {
+        // failed - other one has same amount of cards as you
+        return { operation: 'add', value: 0, event: 'points' };
+      }
+      if (cards.yellow > highest) {
+        // first case - just highest number of yellow
+        const value = cards.yellow ** 2;
+        return { operation: 'add', value, event: 'bonus' };
+      } else if (cards.yellow > highestUnique && highestUnique !== highest) {
+        // second case - second highest number of yellow and first numbers crash
+        // when the highest number is also the higehst unique number, someone else got the bonus
         const value = cards.yellow ** 2;
         return { operation: 'add', value, event: 'bonus' };
       }
