@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameService } from './game.service'; // Importiere den GameService
-import { PlayerCards } from './models/player-cards'; // Importiere das PlayerCards-Interface
+import { PlayerCard } from './models/player-cards'; // Importiere das PlayerCards-Interface
 import { Rule } from './models/rule';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
@@ -35,7 +35,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   `,
 })
 export class AppComponent {
-  playerCards: PlayerCards = { red: 0, blue: 0, green: 0, gold: 0, black: 0 }; // Initialisierte Spieler-Karten
+  playerCards: PlayerCard = { red: 0, blue: 0, green: 0, gold: 0, black: 0 }; // Initialisierte Spieler-Karten
   totalPoints: number = 0; // Gesamtpunkte
   playerRules: Rule[] | undefined; // Regeln für den Spieler
 

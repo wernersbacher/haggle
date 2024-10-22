@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { GameService } from '../game.service';
-import { PlayerCards } from '../models/player-cards';
+import { PlayerCard } from '../models/player-cards';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
 })
 export class GameRulesComponent {
   @Input() rules: any[] = [];
-  cards = { red: 0, blue: 0, green: 0, gold: 0, black: 0 } as PlayerCards;
+  cards = { red: 0, blue: 0, green: 0, gold: 0, black: 0 } as PlayerCard;
   totalPoints: number = 0;
 
   constructor(private gameService: GameService) {}

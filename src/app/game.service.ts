@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PlayerCards } from './models/player-cards';
 import { Rule } from './models/rule';
+import { Player } from './models/player';
 
 @Injectable({
   providedIn: 'root',
@@ -43,28 +44,23 @@ export class GameService {
     },
   ];
 
-  countCards(card: PlayerCards): number {
-    // todo: automate
-    return card.red + card.blue + card.green + card.gold + card.black;
-  }
-
-  generateRules(numberOfPlayers: number) {
-    let playerRules = [];
-    for (let i = 0; i < numberOfPlayers; i++) {
-      playerRules.push(this.shuffleAndPickRules(3)); // 3 Regeln pro Spieler z.B.
-    }
-    return playerRules;
+  generatePlayer(name: string) {
+    let rules = this.shuffleAndPickRules(3);
+    let cards = new PlayerCards();
+    let player = new Player(name, rules, cards);
+    return player;
   }
 
   private shuffleAndPickRules(number: number) {
+    // todo: depending on the number of rules and players
     let shuffled = this.rules.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, number);
   }
 
-  evaluatePlayer(cards: PlayerCards) {
+  evaluatePlayer(player: Player) {
     let points = 0;
-    this.rules.forEach((rule) => {
-      points += rule.evaluate(cards);
+    player.rules.forEach((rule) => {
+      points += rule.evaluate(player.cards);
     });
     return points;
   }

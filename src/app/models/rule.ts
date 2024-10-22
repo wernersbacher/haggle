@@ -1,7 +1,6 @@
-import { PlayerCards } from "./player-cards";
+import { PlayerCards } from './player-cards';
 
 export interface Rule {
-
-    description: string;
-    evaluate(cards: PlayerCards): number;
+  description: string;
+  evaluate(cards: PlayerCards): number;
 }
