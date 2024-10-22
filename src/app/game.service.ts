@@ -49,7 +49,7 @@ export class GameService {
   evaluatePlayer(player: Player) {
     let points = 0;
     player.rules.forEach((rule) => {
-      points += rule.evaluate(player.cards);
+      // todo
     });
     return points;
   }

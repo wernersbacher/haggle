@@ -1,3 +1,4 @@
+import { RuleResult } from '../game-rules/rules-types';
 import { PlayerCards } from './player-cards';
 
 export interface Rule {

@@ -1,5 +1,6 @@
 import { CardColors, PlayerCards } from '../models/player-cards';
 import { Rule } from './../models/rule';
+import { RuleResult } from './rules-types';
 
 // calculated from ruleset
 const BASIC_VALUES: CardColors = {

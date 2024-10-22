@@ -11,14 +11,4 @@ export class Player {
     this.rules = rules;
     this.cards = cards;
   }
-
-  totalCards = () => {
-    return (
-      this.cards.red +
-      this.cards.blue +
-      this.cards.yellow +
-      this.cards.white +
-      this.cards.black
-    );
-  };
 }
