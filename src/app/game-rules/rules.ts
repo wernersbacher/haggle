@@ -46,10 +46,7 @@ const evaluateYellow = (
   const otherCardsYellow = otherCards.map((p) => p.yellow);
   const { highest, highestUnique } = findHighestNumbers(otherCardsYellow);
 
-  if (cards.yellow === highest || cards.yellow === 0) {
-    // failed - other one has same amount of cards as you
-    value = 0;
-  } else if (cards.yellow > highest) {
+  if (cards.yellow > highest) {
     // first case - just highest number of yellow
     value += cards.yellow ** 2;
     // desc: rule 8 applied
