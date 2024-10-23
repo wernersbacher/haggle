@@ -22,6 +22,7 @@ describe('PlayerCards', () => {
   });
 
   it('should reduce a random card by 1', () => {
+    // todo: flakey
     playerCards.red = 1;
     playerCards.yellow = 1;
     playerCards.blue = 1;

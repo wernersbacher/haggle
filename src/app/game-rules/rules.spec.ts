@@ -1,4 +1,4 @@
-import { calculateTotalPoints, RULES } from './rules';
+import { calculateResults, calculateTotalPoints, RULES } from './rules';
 import { CardColors, PlayerCards } from '../models/player-cards';
 import { Player } from '../models/player';
 import { RuleResult } from './rules-types';
@@ -679,7 +679,7 @@ describe('distinct', () => {
       });
 
       // Act
-      const points = calculateTotalPoints(playerCards, otherPlayers);
+      const results = calculateResults(playerCards, otherPlayers);
       const newTotal = playerCards.total();
 
       // Assert
@@ -704,7 +704,174 @@ describe('RULES INTEGRATED', () => {
       // Arrange
 
       // Act
-      const points = calculateTotalPoints(playerCards, otherPlayers);
+      const results = calculateResults(playerCards, otherPlayers);
+      const points = calculateTotalPoints(results);
+
+      // Assert
+      expect(points).toBe(0);
+    });
+  });
+
+  describe('orange cards', () => {
+    describe('one orange and one blue (rule 1, rule 3, rule 5)', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        orange: 1,
+        blue: 1,
+        white: 0,
+        red: 0,
+        yellow: 0,
+      });
+      otherPlayers = [];
+
+      const results = calculateResults(playerCards, otherPlayers);
+      it('should get right amount of points per rule', () => {
+        const result1 = results.find((r) => r.rule === 'rule1')!.ruleResult;
+        const result3 = results.find((r) => r.rule === 'rule3')!.ruleResult;
+        const result5 = results.find((r) => r.rule === 'rule5')!.ruleResult;
+        // Assert
+        expect(result1.value).toBe(4);
+        expect(result3.value).toBe(2);
+        expect(result5.value).toBe(0);
+      });
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        expect(points).toBe(4 + 2);
+      });
+    });
+  });
+
+  describe('white cards', () => {
+    describe('one white card (rule 2)', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        orange: 0,
+        blue: 0,
+        white: 1,
+        red: 0,
+        yellow: 0,
+      });
+      otherPlayers = [];
+
+      const results = calculateResults(playerCards, otherPlayers);
+      it('should get right amount of points per rule', () => {
+        const result2 = results.find((r) => r.rule === 'rule2')!.ruleResult;
+
+        // Assert
+        expect(result2.value).toBe(5);
+      });
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        expect(points).toBe(5);
+      });
+    });
+    describe('4 white cards (rule 2, rule 4)', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        orange: 0,
+        blue: 0,
+        white: 4,
+        red: 0,
+        yellow: 0,
+      });
+      otherPlayers = [];
+
+      const results = calculateResults(playerCards, otherPlayers);
+      it('should get right amount of points per rule', () => {
+        const result2 = results.find((r) => r.rule === 'rule2')!.ruleResult;
+        const result4 = results.find((r) => r.rule === 'rule4')!.ruleResult;
+
+        // Assert
+        expect(result2.value).toBe(20);
+        expect(result4.value).toBe(-20);
+      });
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        expect(points).toBe(0);
+      });
+    });
+    describe('2 white cards and 2 yellows (rule 2, rule 13)', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        orange: 0,
+        blue: 0,
+        white: 2,
+        red: 0,
+        yellow: 2,
+      });
+      otherPlayers = [];
+
+      const results = calculateResults(playerCards, otherPlayers);
+      it('should get right amount of points per rule', () => {
+        const result2 = results.find((r) => r.rule === 'rule2')!.ruleResult;
+        const result13 = results.find((r) => r.rule === 'rule13')!.ruleResult;
+
+        // Assert
+        expect(result2.value).toBe(10);
+        expect(result13.value).toBe(5);
+      });
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        expect(points).toBe(15);
+      });
+    });
+  });
+
+  xdescribe('example 1', () => {
+    // Arrange
+    playerCards = getPlayerCards({
+      orange: 4,
+      blue: 3,
+      white: 2,
+      red: 1,
+      yellow: 0,
+    });
+    otherPlayers = [
+      getPlayerCards({ red: 3, blue: 1, white: 2, orange: 0, yellow: 0 }),
+      getPlayerCards({ red: 0, blue: 5, white: 0, orange: 2, yellow: 3 }),
+    ];
+
+    // Act
+    const results = calculateResults(playerCards, otherPlayers);
+
+    it('rule 1 orange cards base value', () => {
+      // get the points for the first rule
+      const result = results.find((r) => r.rule === 'rule1')!;
+
+      // Assert
+      expect(result.ruleResult.value).toBe(16);
+    });
+
+    it('rule 2 white cards base value', () => {
+      // get the points for the first rule
+      const result = results.find((r) => r.rule === 'rule2')!;
+
+      // Assert
+      expect(result.ruleResult.value).toBe(10);
+    });
+    it('rule 3 blue cards base value', () => {
+      // get the points for the first rule
+      const result = results.find((r) => r.rule === 'rule3')!;
+
+      // Assert
+      expect(result.ruleResult.value).toBe(10);
+    });
+
+    it('should have the right amount of total points', () => {
+      // Act
+      const points = calculateTotalPoints(results);
 
       // Assert
       expect(points).toBe(0);

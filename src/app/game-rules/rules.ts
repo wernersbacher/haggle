@@ -205,25 +205,35 @@ export const RULES: Rule[] = [
   },
 ];
 
-export function calculateTotalPoints(
+export function calculateResults(
   player: PlayerCards,
   otherPlayers: PlayerCards[]
-): number {
-  let points = 0;
+): { rule: string; ruleResult: RuleResult }[] {
+  let results: { rule: string; ruleResult: RuleResult }[] = [];
 
   // rule 15 - has to be done at first
-  // if player has more than 13 cards, remove exess at random
+  // if player has more than 13 cards, remove excess at random
   player.reduceRandomCards(player.total() - 13);
 
   for (let rule of RULES) {
     let result: RuleResult = rule.evaluate(player, otherPlayers);
+    results.push({ rule: rule.shortname, ruleResult: result });
+  }
 
-    if (result.event === 'points') {
-      points += result.value;
-    } else if (result.event === 'disqualified') {
+  return results;
+}
+
+export function calculateTotalPoints(
+  results: { rule: string; ruleResult: RuleResult }[]
+) {
+  let points = 0;
+  for (let res of results) {
+    if (res.ruleResult.event === 'points') {
+      points += res.ruleResult.value;
+    } else if (res.ruleResult.event === 'disqualified') {
+      console.log(results);
       return -Infinity;
     }
   }
-
   return points;
 }
