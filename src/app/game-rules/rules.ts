@@ -78,7 +78,7 @@ export const RULES: Rule[] = [
       }
 
       // Return the result with the total points deducted
-      return { operation: 'add', value: totalPointsDeducted, event: 'points' };
+      return { operation: 'add', value: totalPointsDeducted, event: 'bonus' };
     },
   },
   {
@@ -196,19 +196,6 @@ export const RULES: Rule[] = [
       return { operation: 'add', value, event: 'points' };
     },
   },
-  {
-    shortname: 'rule15',
-    description: 'Es dürfen nicht mehr als 13 Karten gewertet werden',
-    evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      const totalCards =
-        cards.red + cards.blue + cards.yellow + cards.orange + cards.white;
-      if (totalCards > 13) {
-        // TODO: Remove card randomly
-        return { operation: 'add', value: -(totalCards - 13), event: 'points' };
-      }
-      return { operation: 'add', value: 0, event: 'points' };
-    },
-  },
 ];
 
 function calculateTotalPoints(
@@ -217,9 +204,9 @@ function calculateTotalPoints(
 ): number {
   let points = 0;
 
-  // todo: make sure otherplayers has no the own player inside
-
-  // loopen durch alle Regeln und methoden anwenden
+  // rule 15 - has to be done at first
+  // if player has more than 13 cards, remove exess at random
+  player.reduceRandomCards(player.total() - 13);
 
   for (let rule of RULES) {
     let result: RuleResult = rule.evaluate(player, otherPlayers);
