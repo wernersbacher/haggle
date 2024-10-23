@@ -4,9 +4,9 @@ import { RuleResult } from './rules-types';
 
 // Define the basic values for each color
 const BASIC_VALUES = {
-  red: 1,
+  red: 3,
   blue: 2,
-  yellow: 3,
+  yellow: 1,
   orange: 4,
   white: 5,
 };

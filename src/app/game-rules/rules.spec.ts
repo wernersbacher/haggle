@@ -120,10 +120,10 @@ describe('RULES INTEGRATED', () => {
         // points:
         // - 2 white cards * 5 points = 10
         // - 2 yellow cards double the value of one white = 5
-        // - 2 yellow cards * 3 points = 6
+        // - 2 yellow cards * 1 points = 2
         // - most yellow cards: square number = 4
-        // == 25
-        expect(points).toBe(25);
+        // == 21
+        expect(points).toBe(21);
       });
     });
   });
