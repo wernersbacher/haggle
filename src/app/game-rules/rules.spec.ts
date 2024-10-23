@@ -1,4 +1,4 @@
-import { RULES } from './rules';
+import { calculateTotalPoints, RULES } from './rules';
 import { CardColors, PlayerCards } from '../models/player-cards';
 import { Player } from '../models/player';
 import { RuleResult } from './rules-types';
@@ -15,7 +15,7 @@ function getPlayerCards(cards: CardColors): PlayerCards {
   return playerCards;
 }
 
-describe('RULES', () => {
+describe('distinct', () => {
   let rule: Rule;
   let playerCards: PlayerCards;
   let otherPlayers: PlayerCards[];
@@ -333,7 +333,7 @@ describe('RULES', () => {
       expect(result.value).toBe(0); // no cards -> no points
     });
 
-    it('should give the bonus to the player with the most yellow cards', () => {
+    it('should give the points to the player with the most yellow cards', () => {
       playerCards.yellow = 5;
 
       otherPlayers.push(
@@ -345,11 +345,11 @@ describe('RULES', () => {
 
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('bonus');
-      expect(result.value).toBe(25); // 5 yellow cards, bonus is 5^2 = 25
+      expect(result.event).toBe('points');
+      expect(result.value).toBe(25); // 5 yellow cards, points is 5^2 = 25
     });
 
-    it('should NOT give the bonus to the player when same amount', () => {
+    it('should NOT give the points to the player when same amount', () => {
       playerCards.yellow = 5;
 
       otherPlayers.push(
@@ -364,7 +364,7 @@ describe('RULES', () => {
       expect(result.value).toBe(0);
     });
 
-    it('should give the bonus to the player when others max is same', () => {
+    it('should give the points to the player when others max is same', () => {
       playerCards.yellow = 3;
 
       otherPlayers.push(
@@ -376,11 +376,11 @@ describe('RULES', () => {
 
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('bonus');
+      expect(result.event).toBe('points');
       expect(result.value).toBe(9);
     });
 
-    it('should NOT give the bonus to the player when others is higher', () => {
+    it('should NOT give the points to the player when others is higher', () => {
       playerCards.yellow = 3;
 
       otherPlayers.push(
@@ -497,7 +497,7 @@ describe('RULES', () => {
       expect(result.operation).toBe('add');
       expect(result.value).toBe(pyramideValue);
     });
-    it('should not multiply by 2 for unperfect pyramide', () => {
+    it('should not give extra points for unperfect pyramide', () => {
       playerCards = getPlayerCards({
         red: 4,
         blue: 2,
@@ -532,7 +532,7 @@ describe('RULES', () => {
       expect(result.value).toBe(0);
     });
 
-    it('should give the bonus to the player with the most red cards', () => {
+    it('should give the points to the player with the most red cards', () => {
       playerCards.red = 5;
 
       otherPlayers.push(
@@ -547,7 +547,7 @@ describe('RULES', () => {
       expect(result.value).toBe(15);
     });
 
-    it('should NOT give the bonus to the player when same amount', () => {
+    it('should NOT give the points to the player when same amount', () => {
       playerCards.red = 5;
 
       otherPlayers.push(
@@ -562,7 +562,7 @@ describe('RULES', () => {
       expect(result.value).toBe(0);
     });
 
-    it('should NOT give the bonus to the player when others is higher', () => {
+    it('should NOT give the points to the player when others is higher', () => {
       playerCards.red = 2;
 
       otherPlayers.push(
@@ -617,7 +617,6 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-
         expect(result.value).toBe(args.points);
       });
     });
@@ -665,6 +664,50 @@ describe('RULES', () => {
 
         expect(result.value).toBe(args.points);
       });
+    });
+  });
+
+  describe('rule15 max 13 cards', () => {
+    it('should remove exess cards', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 3,
+        yellow: 5,
+        blue: 2,
+        orange: 0,
+        white: 5,
+      });
+
+      // Act
+      const points = calculateTotalPoints(playerCards, otherPlayers);
+      const newTotal = playerCards.total();
+
+      // Assert
+      expect(newTotal).toBe(13);
+    });
+  });
+});
+
+describe('RULES INTEGRATED', () => {
+  let playerCards: PlayerCards;
+  let otherPlayers: PlayerCards[];
+
+  beforeEach(() => {
+    playerCards = new PlayerCards();
+    otherPlayers = [];
+  });
+
+  // test EVERYTHING
+
+  describe('no cards', () => {
+    it('should have 0 points', () => {
+      // Arrange
+
+      // Act
+      const points = calculateTotalPoints(playerCards, otherPlayers);
+
+      // Assert
+      expect(points).toBe(0);
     });
   });
 });

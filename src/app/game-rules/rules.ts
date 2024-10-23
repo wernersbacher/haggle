@@ -78,13 +78,13 @@ export const RULES: Rule[] = [
       }
 
       // Return the result with the total points deducted
-      return { operation: 'add', value: totalPointsDeducted, event: 'bonus' };
+      return { operation: 'add', value: totalPointsDeducted, event: 'points' };
     },
   },
   {
     shortname: 'rule8',
     description:
-      'Der Spieler mit den meisten gelben Karten bekommt Bonuspunkte, außer jemand andere hat allein mehr gelbe Karten',
+      'Der Spieler mit den meisten gelben Karten bekommt pointspunkte, außer jemand andere hat allein mehr gelbe Karten',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
       const otherCardsYellow = otherCards.map((p) => p.yellow);
 
@@ -97,12 +97,12 @@ export const RULES: Rule[] = [
       if (cards.yellow > highest) {
         // first case - just highest number of yellow
         const value = cards.yellow ** 2;
-        return { operation: 'add', value, event: 'bonus' };
+        return { operation: 'add', value, event: 'points' };
       } else if (cards.yellow > highestUnique && highestUnique !== highest) {
         // second case - second highest number of yellow and first numbers crash
-        // when the highest number is also the higehst unique number, someone else got the bonus
+        // when the highest number is also the higehst unique number, someone else got the points
         const value = cards.yellow ** 2;
-        return { operation: 'add', value, event: 'bonus' };
+        return { operation: 'add', value, event: 'points' };
       }
       return { operation: 'add', value: 0, event: 'points' };
     },
@@ -174,14 +174,14 @@ export const RULES: Rule[] = [
 
       if (cards.red === highest || cards.red === 0) {
         // failed - other one has same amount of cards as you
-        return { operation: 'add', value: 0, event: 'bonus' };
+        return { operation: 'add', value: 0, event: 'points' };
       }
       if (cards.red > highest) {
         // first case - just highest number of red
-        let bonus = cards.red * BASIC_VALUES.red; // double the value
-        return { operation: 'add', value: bonus, event: 'bonus' };
+        let points = cards.red * BASIC_VALUES.red; // double the value
+        return { operation: 'add', value: points, event: 'points' };
       }
-      return { operation: 'add', value: 0, event: 'bonus' };
+      return { operation: 'add', value: 0, event: 'points' };
     },
   },
   {
@@ -205,7 +205,7 @@ export const RULES: Rule[] = [
   },
 ];
 
-function calculateTotalPoints(
+export function calculateTotalPoints(
   player: PlayerCards,
   otherPlayers: PlayerCards[]
 ): number {
@@ -219,12 +219,6 @@ function calculateTotalPoints(
     let result: RuleResult = rule.evaluate(player, otherPlayers);
 
     if (result.event === 'points') {
-      if (result.operation === 'add') {
-        points += result.value;
-      } else if (result.operation === 'multiply') {
-        points *= result.value;
-      }
-    } else if (result.event === 'bonus') {
       points += result.value;
     } else if (result.event === 'disqualified') {
       return -Infinity;

@@ -1,6 +1,6 @@
 type RuleOperation = 'add';
 
-type RuleEvent = 'disqualified' | 'bonus' | 'protection' | 'points';
+type RuleEvent = 'disqualified' | 'points';
 
 export interface RuleResult {
   operation: RuleOperation;
