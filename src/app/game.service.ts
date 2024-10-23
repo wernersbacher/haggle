@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PlayerCards } from './models/player-cards';
 import { Player } from './models/player';
-import { RULES } from './game-rules/rules';
 import Rand from 'rand-seed';
+import { RULES } from './game-rules/rule-desc';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
