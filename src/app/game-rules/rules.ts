@@ -181,11 +181,9 @@ export const RULES: Rule[] = [
     shortname: 'rule13',
     description: 'Jeweils zwei gelbe Karten verdoppeln eine weiße Karte',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      if (cards.yellow >= 2) {
-        const value = Math.floor(cards.yellow / 2) * BASIC_VALUES.white;
-        return { operation: 'add', value, event: 'points' };
-      }
-      return { operation: 'add', value: 0, event: 'points' };
+      const factor = Math.min(Math.floor(cards.yellow / 2), cards.white);
+      const value = factor * BASIC_VALUES.white;
+      return { operation: 'add', value, event: 'points' };
     },
   },
   {
@@ -193,11 +191,9 @@ export const RULES: Rule[] = [
     description:
       'Jeweils 3 blaue Karten vervierfachen den Wert einer orangefarbenen Karte',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
-      if (cards.blue >= 3) {
-        const value = Math.floor(cards.blue / 3) * BASIC_VALUES.orange * 4;
-        return { operation: 'add', value, event: 'points' };
-      }
-      return { operation: 'add', value: 0, event: 'points' };
+      const factor = Math.min(Math.floor(cards.blue / 3), cards.orange);
+      const value = factor * BASIC_VALUES.orange * 3; // multiply by 3 because its additonal
+      return { operation: 'add', value, event: 'points' };
     },
   },
   {

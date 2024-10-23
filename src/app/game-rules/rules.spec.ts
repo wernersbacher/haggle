@@ -643,9 +643,9 @@ describe('RULES', () => {
     [
       { blue: 0, orange: 2, points: 0 },
       { blue: 1, orange: 2, points: 0 },
-      { blue: 3, orange: 2, points: 16 },
-      { blue: 7, orange: 5, points: 32 },
-      { blue: 7, orange: 1, points: 16 },
+      { blue: 3, orange: 2, points: 12 },
+      { blue: 7, orange: 5, points: 24 },
+      { blue: 7, orange: 1, points: 12 },
     ].forEach((args) => {
       it(`should double every orange, ${args.blue} blue and ${args.orange} oranges`, () => {
         // Arrange
