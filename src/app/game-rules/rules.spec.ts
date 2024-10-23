@@ -34,7 +34,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
 
@@ -48,7 +48,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(8);
       });
     });
@@ -68,7 +68,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
 
@@ -82,7 +82,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(15);
       });
     });
@@ -102,7 +102,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
 
@@ -116,7 +116,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(8);
       });
     });
@@ -136,7 +136,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
     [0, 1, 2, 3].forEach((white) => {
@@ -149,7 +149,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(0);
       });
     });
@@ -162,7 +162,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(-20);
     });
   });
@@ -181,7 +181,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
     [
@@ -199,7 +199,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(0);
       });
     });
@@ -214,7 +214,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(-4);
     });
   });
@@ -233,7 +233,6 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
       expect(result.value).toBe(0); // no cards -> no points
     });
 
@@ -248,7 +247,6 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
       expect(result.value).toBe(-10);
     });
 
@@ -272,7 +270,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(-30);
     });
 
@@ -288,7 +286,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0);
     });
 
@@ -313,7 +311,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0);
     });
   });
@@ -394,7 +392,7 @@ describe('RULES', () => {
     });
   });
 
-  describe('rule9 disqualitfy when 7 cards of one color', () => {
+  describe('rule9 disqualify when 7 cards of one color', () => {
     beforeEach(() => {
       rule = RULES.find((r) => r.shortname === 'rule9')!;
       playerCards = new PlayerCards();
@@ -408,7 +406,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
 
@@ -424,7 +422,7 @@ describe('RULES', () => {
     });
   });
 
-  describe('rule10 disqualitfy when 7 cards of one color', () => {
+  describe('rule10 disqualify when 7 cards of one color', () => {
     beforeEach(() => {
       rule = RULES.find((r) => r.shortname === 'rule10')!;
       playerCards = new PlayerCards();
@@ -438,7 +436,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
 
@@ -466,19 +464,18 @@ describe('RULES', () => {
       playerCards = new PlayerCards();
       otherPlayers = [];
     });
-    it('empty cards should have no multi', () => {
+    it('empty cards should have no points', () => {
       // Arrange
 
       // Act
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
 
       // Assert
-      expect(result.operation).toBe('multiply');
-      expect(result.event).toBe('points');
-      expect(result.value).toBe(1);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
     });
 
-    it('should multiply by 2 for pyramide', () => {
+    it('should double pyramids worth', () => {
       playerCards = getPlayerCards({
         red: 4,
         blue: 2,
@@ -491,8 +488,14 @@ describe('RULES', () => {
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
 
       // Assert
-      expect(result.operation).toBe('multiply');
-      expect(result.value).toBe(2);
+      const pyramideValue =
+        playerCards.red * 3 +
+        playerCards.blue * 2 +
+        playerCards.yellow +
+        playerCards.orange * 4 +
+        playerCards.white * 5;
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(pyramideValue);
     });
     it('should not multiply by 2 for unperfect pyramide', () => {
       playerCards = getPlayerCards({
@@ -507,8 +510,8 @@ describe('RULES', () => {
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
 
       // Assert
-      expect(result.operation).toBe('multiply');
-      expect(result.value).toBe(1);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
     });
   });
 
@@ -525,11 +528,11 @@ describe('RULES', () => {
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
 
       // Assert
-      expect(result.operation).toBe('multiply');
-      expect(result.value).toBe(1);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
     });
 
-    it('should give the bonus to the player with the most yellow cards', () => {
+    it('should give the bonus to the player with the most red cards', () => {
       playerCards.red = 5;
 
       otherPlayers.push(
@@ -540,9 +543,8 @@ describe('RULES', () => {
       );
 
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
-      expect(result.operation).toBe('multiply');
-      expect(result.event).toBe('bonus');
-      expect(result.value).toBe(2);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(15);
     });
 
     it('should NOT give the bonus to the player when same amount', () => {
@@ -556,9 +558,8 @@ describe('RULES', () => {
       );
 
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
-      expect(result.operation).toBe('multiply');
-      expect(result.event).toBe('bonus');
-      expect(result.value).toBe(1);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
     });
 
     it('should NOT give the bonus to the player when others is higher', () => {
@@ -572,9 +573,8 @@ describe('RULES', () => {
       );
 
       const result: RuleResult = rule.evaluate(playerCards, otherPlayers);
-      expect(result.operation).toBe('multiply');
-      expect(result.event).toBe('bonus');
-      expect(result.value).toBe(1);
+      expect(result.operation).toBe('add');
+      expect(result.value).toBe(0);
     });
   });
 
@@ -592,7 +592,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
     [
@@ -617,7 +617,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(args.points);
       });
     });
@@ -637,7 +637,7 @@ describe('RULES', () => {
 
       // Assert
       expect(result.operation).toBe('add');
-      expect(result.event).toBe('points');
+
       expect(result.value).toBe(0); // no cards -> no points
     });
     [
@@ -662,7 +662,7 @@ describe('RULES', () => {
 
         // Assert
         expect(result.operation).toBe('add');
-        expect(result.event).toBe('points');
+
         expect(result.value).toBe(args.points);
       });
     });

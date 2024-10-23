@@ -152,15 +152,21 @@ export const RULES: Rule[] = [
       ];
       colors.sort((a, b) => b - a);
       if (colors.toString() === [4, 3, 2, 1, 0].toString()) {
-        return { operation: 'multiply', value: 2, event: 'points' };
+        const pyramideValue =
+          cards.red * BASIC_VALUES.red +
+          cards.blue * BASIC_VALUES.blue +
+          cards.yellow * BASIC_VALUES.yellow +
+          cards.orange * BASIC_VALUES.orange +
+          cards.white * BASIC_VALUES.white;
+        return { operation: 'add', value: pyramideValue, event: 'points' };
       }
-      return { operation: 'multiply', value: 1, event: 'points' };
+      return { operation: 'add', value: 0, event: 'points' };
     },
   },
   {
     shortname: 'rule12',
     description:
-      'Der Spieler mit den meisten roten Karten verdoppelt ihren Wert',
+      'Der Spieler mit den meisten roten Karten verdoppelt deren Wert',
     evaluate: (cards: PlayerCards, otherCards: PlayerCards[]): RuleResult => {
       const otherCardsRed = otherCards.map((p) => p.red);
 
@@ -168,13 +174,14 @@ export const RULES: Rule[] = [
 
       if (cards.red === highest || cards.red === 0) {
         // failed - other one has same amount of cards as you
-        return { operation: 'multiply', value: 1, event: 'bonus' };
+        return { operation: 'add', value: 0, event: 'bonus' };
       }
       if (cards.red > highest) {
         // first case - just highest number of red
-        return { operation: 'multiply', value: 2, event: 'bonus' };
+        let bonus = cards.red * BASIC_VALUES.red; // double the value
+        return { operation: 'add', value: bonus, event: 'bonus' };
       }
-      return { operation: 'multiply', value: 1, event: 'bonus' };
+      return { operation: 'add', value: 0, event: 'bonus' };
     },
   },
   {
