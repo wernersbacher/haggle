@@ -1,6 +1,6 @@
 import { Rule } from '../models/rule';
 
-export const RULES: Rule[] = [
+export const ORIGINAL_RULES: Rule[] = [
   {
     shortname: 'rule1',
     description: 'Orange-Karten haben einen Basiswert von 4',
