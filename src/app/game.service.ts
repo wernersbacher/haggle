@@ -4,6 +4,7 @@ import { Player } from './models/player';
 import Rand from 'rand-seed';
 import { ORIGINAL_RULES } from './game-rules/rule-desc';
 import { Rule } from './models/rule';
+import { shuffleArray } from './helper/shuffle-array';
 
 const MIN_RULES_PER_PLAYER = 2;
 
@@ -47,14 +48,8 @@ export class GameService {
     return player;
   }
 
-  private distributeRules(rules: Rule[]): void {
-    const totalPlayers = this.players.length;
+  distributeRules(rules: Rule[]): void {
     const totalRules = rules.length;
-    const minRulesPerPlayer = Math.min(
-      Math.floor(totalRules / totalPlayers),
-      MIN_RULES_PER_PLAYER
-    );
-
     let shuffledRules = [...rules]; // Kopie der Regeln erstellen
     shuffleArray(shuffledRules); // Regeln zufällig mischen
 
@@ -62,16 +57,14 @@ export class GameService {
     var restarts = 0;
     var r = 0;
     for (let player of this.players) {
-      for (let i = 0; i < minRulesPerPlayer; i++) {
-        const rule = shuffledRules[r];
-        player.rules.push(rule);
+      const rule = shuffledRules[r];
+      player.rules.push(rule);
 
-        // loop over rules, start from beginning if end is reached
-        r += 1;
-        if (r >= totalRules) {
-          r = 0;
-          restarts += 1;
-        }
+      // loop over rules, start from beginning if end is reached
+      r += 1;
+      if (r >= totalRules) {
+        r = 0;
+        restarts += 1;
       }
     }
 
@@ -81,7 +74,7 @@ export class GameService {
       return;
     }
 
-    // loop over remaining rules and distribute them
+    // loop over not used rules and distribute them
     for (r; r < totalRules; r++) {
       let ruleToDistribute = shuffledRules[r];
 
@@ -94,6 +87,26 @@ export class GameService {
         let randomPlayer = eligiblePlayers[randIndex];
         randomPlayer.rules.push(ruleToDistribute!);
       }
+    }
+
+    // make sure that every player has the same amount of rules
+
+    // the first player always has the most rules
+    var rulesPerPlayer = this.players[0].rules.length;
+
+    for (let player of this.players) {
+      if (player.rules.length === rulesPerPlayer) {
+        continue; // player has enough rules, skip.
+      }
+
+      // add random rule the player doesnt have yet
+      var rand: Rand = new Rand(this.seed + player.name);
+      var randIndex = Math.floor(rand.next() * rules.length);
+      while (player.rules.includes(rules[randIndex])) {
+        randIndex = Math.floor(rand.next() * rules.length);
+      }
+      var rule = rules[randIndex];
+      player.rules.push(rule);
     }
   }
 

@@ -4,7 +4,7 @@ import { Rule } from './models/rule';
 import { PlayerCards } from './models/player-cards';
 
 describe('GameService', () => {
-  let service: GameService;
+  let service: GameService = new GameService();
 
   it('should be created', () => {
     expect(service).toBeTruthy();
@@ -25,35 +25,45 @@ describe('GameService', () => {
 
   describe('distributeRules', () => {
     it('should distribute the correct number of rules to players', () => {
+      // Arrange
       const players = generateMockPlayers(['Alice', 'Bob', 'Charlie']);
       const rules = generateMockRules(9); // 9 Regeln
+      service.players = players;
 
-      distributeRules(players, rules);
+      // Act
+      service.distributeRules(rules);
 
-      // Jeder Spieler sollte gleich viele Regeln haben
+      // Assert
       expect(players[0].rules.length).toBe(3);
       expect(players[1].rules.length).toBe(3);
       expect(players[2].rules.length).toBe(3);
     });
 
     it('should handle rule distribution when number of rules is not divisible by number of players', () => {
+      // Arrange
       const players = generateMockPlayers(['Alice', 'Bob', 'Charlie']);
       const rules = generateMockRules(8); // 8 Regeln
+      service.players = players;
 
-      distributeRules(players, rules);
+      // Act
+      service.distributeRules(rules);
 
-      // Da 8 Regeln nicht gleichmäßig auf 3 Spieler verteilt werden können, bekommen manche 2, manche 3 Regeln
-      const ruleCounts = players.map((player) => player.rules.length);
-      expect(ruleCounts).toContain(2); // Mindestens ein Spieler hat 2 Regeln
-      expect(ruleCounts).toContain(3); // Mindestens ein Spieler hat 3 Regeln
+      // Assert
+      expect(players[0].rules.length).toBe(3);
+      expect(players[1].rules.length).toBe(3);
+      expect(players[2].rules.length).toBe(3);
     });
 
     it('should not assign the same rule to a player more than once', () => {
+      // Arrange
       const players = generateMockPlayers(['Alice', 'Bob', 'Charlie']);
       const rules = generateMockRules(6); // 6 Regeln
+      service.players = players;
 
-      distributeRules(players, rules);
+      // Act
+      service.distributeRules(rules);
 
+      // Assert
       // Sicherstellen, dass keine doppelten Regeln bei einem Spieler vorhanden sind
       players.forEach((player) => {
         const ruleNames = player.rules.map((rule) => rule.shortname);
@@ -63,11 +73,15 @@ describe('GameService', () => {
     });
 
     it('should distribute all rules to players', () => {
+      // Arrange
       const players = generateMockPlayers(['Alice', 'Bob', 'Charlie']);
       const rules = generateMockRules(9); // 9 Regeln
+      service.players = players;
 
-      distributeRules(players, rules);
+      // Act
+      service.distributeRules(rules);
 
+      // Assert
       // Sicherstellen, dass alle Regeln verteilt wurden
       const allPlayerRules = players.flatMap((player) => player.rules);
       const ruleNames = allPlayerRules.map((rule) => rule.shortname);
