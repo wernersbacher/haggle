@@ -41,6 +41,15 @@ export class PlayerInputComponent {
     { name: 'Sabine' } as PlayerFormData,
     { name: 'Ernst' } as PlayerFormData,
     { name: 'Franzi' } as PlayerFormData,
+    { name: 'Hans' } as PlayerFormData,
+    { name: 'Maja' } as PlayerFormData,
+    { name: 'Hannah' } as PlayerFormData,
+    { name: 'Johann' } as PlayerFormData,
+    { name: 'Markus' } as PlayerFormData,
+    { name: 'Manuel' } as PlayerFormData,
+    { name: 'Frieda' } as PlayerFormData,
+    { name: 'Mareike' } as PlayerFormData,
+    { name: 'Patrick' } as PlayerFormData,
   ];
 
   form: FormGroup = this.formBuilder.group({

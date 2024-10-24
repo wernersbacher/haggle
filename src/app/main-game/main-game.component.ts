@@ -4,6 +4,13 @@ import { Component } from '@angular/core';
 import { PlayerInputComponent } from '../player-input/player-input.component';
 import { GameRulesComponent } from '../game-rules/game-rules.component';
 
+/* TODOS:
+ * todos nach projekt
+ * restart
+ * design
+ * keine doppelten namen?
+ */
+
 @Component({
   selector: 'app-main-game',
   standalone: true,
