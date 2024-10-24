@@ -3,7 +3,7 @@ import { GameService } from './../game.service';
 import { Component } from '@angular/core';
 import { PlayerInputComponent } from '../player-input/player-input.component';
 import { GameRulesComponent } from '../game-rules/game-rules.component';
-import { ResultsComponent } from '../results/results.component';
+import { CardInputComponent } from '../card-input/card-input.component';
 
 /* TODOS:
  * todos nach projekt
@@ -19,7 +19,7 @@ import { ResultsComponent } from '../results/results.component';
     CommonModule,
     PlayerInputComponent,
     GameRulesComponent,
-    ResultsComponent,
+    CardInputComponent,
   ],
   template: `
     <h3>Type in the players names:</h3>
@@ -36,10 +36,18 @@ import { ResultsComponent } from '../results/results.component';
     ></app-game-rules>
 
     <h3>Calculate the winner:</h3>
-    <app-results
+    <app-card-input
       *ngIf="gameStarted"
       [players]="gameService.players"
-    ></app-results>
+    ></app-card-input>
+
+    <button (click)="calculateResult()">Calculate Results!</button>
+    <div *ngIf="gameService.results">
+      <h3>Results:</h3>
+      <div *ngFor="let result of gameService.results">
+        <p>{{ result.player.name }}: {{ result.points }}</p>
+      </div>
+    </div>
   `,
   styleUrl: './main-game.component.css',
 })
@@ -52,5 +60,9 @@ export class MainGameComponent {
 
   onGameStartClicked(playerNames: string[]) {
     this.gameService.startGame(playerNames);
+  }
+
+  calculateResult() {
+    this.gameService.calculateResult();
   }
 }

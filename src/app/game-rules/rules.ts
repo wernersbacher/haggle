@@ -176,7 +176,7 @@ export function evaluateAllRules(
   ];
 }
 
-export function calculateTotalPoints2(results: RuleResult[]): number {
+export function calculateTotalPoints(results: RuleResult[]): number {
   let points = 0;
   let addOperations: RuleResult[] = [];
   let multiplyOperations: RuleResult[] = [];

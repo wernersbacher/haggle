@@ -3,6 +3,7 @@ import { Player } from './models/player';
 import { ORIGINAL_RULES } from './game-rules/rule-desc';
 import { EqualRuleDistributor } from './game-rules/rule-distribution';
 import { generateRandomSeed } from './helper/seed';
+import { calculateTotalPoints, evaluateAllRules } from './game-rules/rules';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -36,11 +37,25 @@ export class GameService {
     return this.players.length > 0;
   }
 
-  evaluatePlayer(player: Player) {
-    let points = 0;
-    player.rules.forEach((rule) => {
-      // todo
+  // TODO: add interface and stuff
+
+  results: CalcResult[] = [];
+
+  calculateResult() {
+    let results: CalcResult[] = [];
+    this.players.forEach((player) => {
+      const playerCards = player.cards;
+      const otherPlayers = this.players
+        .filter((p) => p !== player)
+        .map((p) => p.cards);
+      const ruleResults = evaluateAllRules(playerCards, otherPlayers);
+      const points = calculateTotalPoints(ruleResults);
+      results.push({ player: player, points: points });
     });
-    return points;
+    this.results = results;
   }
+}
+interface CalcResult {
+  player: Player;
+  points: number;
 }

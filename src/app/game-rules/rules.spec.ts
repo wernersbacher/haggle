@@ -1,7 +1,7 @@
 import { CardColors, PlayerCards } from '../models/player-cards';
 import {
   evaluateAllRules,
-  calculateTotalPoints2 as calculateTotalPoints,
+  calculateTotalPoints as calculateTotalPoints,
 } from './rules';
 
 function getPlayerCardsFull(cards: CardColors): PlayerCards {

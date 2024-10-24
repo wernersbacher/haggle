@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-results',
+  selector: 'app-card-input',
   standalone: true,
   imports: [
     CommonModule,
@@ -81,6 +81,6 @@ import { MatInputModule } from '@angular/material/input';
     </div>
   `,
 })
-export class ResultsComponent {
+export class CardInputComponent {
   @Input() players: Player[] = [];
 }
