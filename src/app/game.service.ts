@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Player } from './models/player';
 import { ORIGINAL_RULES } from './game-rules/rule-desc';
-import { RuleDistributor } from './game-rules/rule-distribution';
+import { EqualRuleDistributor } from './game-rules/rule-distribution';
 import { generateRandomSeed } from './helper/seed';
 
 @Injectable({ providedIn: 'root' })
@@ -24,8 +24,12 @@ export class GameService {
     }
 
     // distribute the rules to the players
-    var distributor = new RuleDistributor(this.players, this.seed);
-    distributor.distributeRules(ORIGINAL_RULES);
+    var distributor = new EqualRuleDistributor(
+      this.players,
+      ORIGINAL_RULES,
+      this.seed
+    );
+    distributor.distributeRules();
   }
 
   isGameStarted() {

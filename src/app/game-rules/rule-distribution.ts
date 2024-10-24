@@ -4,20 +4,29 @@ import { Rule } from '../models/rule';
 
 const MIN_RULES_PER_PLAYER = 2;
 
-export class RuleDistributor {
-  constructor(private players: Player[], private seed: string) {
+export interface RuleDistributor {
+  distributeRules(): void;
+}
+
+export class EqualRuleDistributor implements RuleDistributor {
+  constructor(
+    private players: Player[],
+    private rules: Rule[],
+    private seed: string
+  ) {
     this.players = players;
     this.seed = seed;
+    this.rules = rules;
   }
 
-  distributeRules(rules: Rule[]): void {
+  distributeRules(): void {
     const rand = new Rand(this.seed);
     const usedRules = new Set<Rule>();
 
     let minimumRulesAPlayerCurrentlyHas = this.getMinimumRulesPerPlayer();
 
     // Distribute initial rules
-    rules.forEach((rule) => {
+    this.rules.forEach((rule) => {
       minimumRulesAPlayerCurrentlyHas =
         this.distributeRuleToPlayerWithLeastRules(
           rule,
@@ -29,9 +38,9 @@ export class RuleDistributor {
     // Ensure every player has at least the minimum number of rules
     while (
       minimumRulesAPlayerCurrentlyHas < MIN_RULES_PER_PLAYER ||
-      usedRules.size < rules.length
+      usedRules.size < this.rules.length
     ) {
-      const ruleToDistribute = this.getRandomRule(rules, rand);
+      const ruleToDistribute = this.getRandomRule(this.rules, rand);
       minimumRulesAPlayerCurrentlyHas =
         this.distributeRuleToPlayerWithLeastRules(
           ruleToDistribute,
@@ -41,7 +50,7 @@ export class RuleDistributor {
     }
 
     // Balance rules among players
-    this.balanceRulesAmongPlayers(rules);
+    this.balanceRulesAmongPlayers(this.rules);
   }
 
   private getMinimumRulesPerPlayer(): number {
