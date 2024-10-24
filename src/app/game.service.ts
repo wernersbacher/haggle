@@ -50,43 +50,56 @@ export class GameService {
 
   distributeRules(rules: Rule[]): void {
     // todo: make code easier to understand
-    const totalRules = rules.length;
-    let shuffledRules = [...rules]; // Kopie der Regeln erstellen
-    shuffleArray(shuffledRules); // Regeln zufällig mischen
+    var rand: Rand = new Rand(this.seed);
 
-    // every player should the minimum amount of rules
-    var restarts = 0;
-    var r = 0;
-    for (let player of this.players) {
-      const rule = shuffledRules[r];
-      player.rules.push(rule);
+    let MINIMUM_RULES_PER_PLAYER = 2;
 
-      // loop over rules, start from beginning if end is reached
-      r += 1;
-      if (r >= totalRules) {
-        r = 0;
-        restarts += 1;
+    let minimumRulesAPlayerCurrentlyHas = Math.min(
+      ...this.players.map((p) => p.rules.length)
+    );
+
+    let usedRules = new Set();
+
+    // give rules to the players
+    for (let ruleToDistribute of rules) {
+      // player with least rules will get it
+      const eligiblePlayers = this.players.filter(
+        (player) =>
+          player.rules.length == minimumRulesAPlayerCurrentlyHas &&
+          !player.rules.includes(ruleToDistribute)
+      );
+      // if a player with least rule number has the rule already, we failed
+      if (eligiblePlayers.length > 0) {
+        eligiblePlayers[0].rules.push(ruleToDistribute!);
+        usedRules.add(ruleToDistribute);
       }
-    }
-
-    // if some rules where not used, use them here
-    if (restarts > 0) {
-      // all rules were used, no need to distribute more
-      return;
-    }
-
-    // loop over not used rules and distribute them
-    for (r; r < totalRules; r++) {
-      let ruleToDistribute = shuffledRules[r];
-      let minimumRulesAPlayerCurrentlyHas = Math.min(
+      minimumRulesAPlayerCurrentlyHas = Math.min(
         ...this.players.map((p) => p.rules.length)
       );
+    }
+
+    // give players rule until every player has the min amount of rules.
+    while (
+      minimumRulesAPlayerCurrentlyHas < MINIMUM_RULES_PER_PLAYER ||
+      usedRules.size < rules.length
+    ) {
+      var randIndex: number = Math.floor(rand.next() * rules.length);
+      let ruleToDistribute = rules[randIndex];
 
       // player with least rules will get it
       const eligiblePlayers = this.players.filter(
-        (player) => player.rules.length == minimumRulesAPlayerCurrentlyHas
+        (player) =>
+          player.rules.length == minimumRulesAPlayerCurrentlyHas &&
+          !player.rules.includes(ruleToDistribute)
       );
-      eligiblePlayers[0].rules.push(ruleToDistribute!);
+      // if a player with least rule number has the rule already, we failed
+      if (eligiblePlayers.length > 0) {
+        eligiblePlayers[0].rules.push(ruleToDistribute!);
+        usedRules.add(ruleToDistribute);
+      }
+      minimumRulesAPlayerCurrentlyHas = Math.min(
+        ...this.players.map((p) => p.rules.length)
+      );
     }
 
     // make sure that every player has the same amount of rules

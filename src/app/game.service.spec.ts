@@ -39,6 +39,21 @@ describe('GameService', () => {
       expect(players[2].rules.length).toBe(3);
     });
 
+    it('should give any player minimum amount of rules', () => {
+      // Arrange
+      const players = generateMockPlayers(['Alice', 'Bob', 'Charlie']);
+      const rules = generateMockRules(3);
+      service.players = players;
+
+      // Act
+      service.distributeRules(rules);
+
+      // Assert
+      expect(players[0].rules.length).toBe(2);
+      expect(players[1].rules.length).toBe(2);
+      expect(players[2].rules.length).toBe(2);
+    });
+
     it('should handle rule distribution when number of rules is not divisible by number of players', () => {
       // Arrange
       const players = generateMockPlayers(['Alice', 'Bob', 'Charlie']);
