@@ -10,9 +10,8 @@ export class RuleDistributor {
     this.seed = seed;
   }
 
-  distributeRules(rules: Rule[], seed: string): void {
-    const rand = new Rand(seed);
-    const MINIMUM_RULES_PER_PLAYER = 2;
+  distributeRules(rules: Rule[]): void {
+    const rand = new Rand(this.seed);
     const usedRules = new Set<Rule>();
 
     let minimumRulesAPlayerCurrentlyHas = this.getMinimumRulesPerPlayer();
@@ -29,7 +28,7 @@ export class RuleDistributor {
 
     // Ensure every player has at least the minimum number of rules
     while (
-      minimumRulesAPlayerCurrentlyHas < MINIMUM_RULES_PER_PLAYER ||
+      minimumRulesAPlayerCurrentlyHas < MIN_RULES_PER_PLAYER ||
       usedRules.size < rules.length
     ) {
       const ruleToDistribute = this.getRandomRule(rules, rand);
