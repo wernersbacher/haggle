@@ -49,6 +49,7 @@ export class GameService {
   }
 
   distributeRules(rules: Rule[]): void {
+    // todo: make code easier to understand
     const totalRules = rules.length;
     let shuffledRules = [...rules]; // Kopie der Regeln erstellen
     shuffleArray(shuffledRules); // Regeln zufällig mischen
@@ -77,16 +78,15 @@ export class GameService {
     // loop over not used rules and distribute them
     for (r; r < totalRules; r++) {
       let ruleToDistribute = shuffledRules[r];
-
-      const eligiblePlayers = this.players.filter(
-        (player) => !player.rules.includes(ruleToDistribute!)
+      let minimumRulesAPlayerCurrentlyHas = Math.min(
+        ...this.players.map((p) => p.rules.length)
       );
-      if (eligiblePlayers.length > 0) {
-        var rand: Rand = new Rand(this.seed + ruleToDistribute!.shortname);
-        var randIndex = Math.floor(rand.next() * eligiblePlayers.length);
-        let randomPlayer = eligiblePlayers[randIndex];
-        randomPlayer.rules.push(ruleToDistribute!);
-      }
+
+      // player with least rules will get it
+      const eligiblePlayers = this.players.filter(
+        (player) => player.rules.length == minimumRulesAPlayerCurrentlyHas
+      );
+      eligiblePlayers[0].rules.push(ruleToDistribute!);
     }
 
     // make sure that every player has the same amount of rules
