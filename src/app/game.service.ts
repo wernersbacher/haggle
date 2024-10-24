@@ -10,8 +10,6 @@ const MIN_RULES_PER_PLAYER = 2;
 @Injectable({ providedIn: 'root' })
 export class GameService {
   seed: string = '';
-  rand: Rand = new Rand();
-  first_rand_numer = this.rand.next();
   players: Player[] = [];
 
   startGame(playerNames: string[], seed: string = '') {
@@ -33,8 +31,6 @@ export class GameService {
 
   setSeed(seed: string) {
     this.seed = seed;
-    this.rand = new Rand(this.seed);
-    this.first_rand_numer = this.rand.next();
   }
 
   isGameStarted() {
@@ -58,32 +54,44 @@ export class GameService {
       Math.floor(totalRules / totalPlayers),
       MIN_RULES_PER_PLAYER
     );
-    // rules remaining after giving each player the minimum amount of rules
-    const remainingRules = totalRules % minRulesPerPlayer;
 
     let shuffledRules = [...rules]; // Kopie der Regeln erstellen
     shuffleArray(shuffledRules); // Regeln zufällig mischen
 
-    // every player should get one popped ruled
-    // then afterwards the remaining rules are distributed randomly
+    // every player should the minimum amount of rules
+    var restarts = 0;
+    var r = 0;
     for (let player of this.players) {
       for (let i = 0; i < minRulesPerPlayer; i++) {
-        const rule = shuffledRules.pop()!;
+        const rule = shuffledRules[r];
         player.rules.push(rule);
+
+        // loop over rules, start from beginning if end is reached
+        r += 1;
+        if (r >= totalRules) {
+          r = 0;
+          restarts += 1;
+        }
       }
     }
 
-    // Schritt 2: Verteile die restlichen Regeln (jedoch ohne doppelte Zuweisung)
-    for (let i = 0; i < remainingRules; i++) {
-      let ruleToDistribute = shuffledRules.pop();
+    // if some rules where not used, use them here
+    if (restarts > 0) {
+      // all rules were used, no need to distribute more
+      return;
+    }
 
-      // Verteile diese Regel an einen Spieler, der sie noch nicht hat
+    // loop over remaining rules and distribute them
+    for (r; r < totalRules; r++) {
+      let ruleToDistribute = shuffledRules[r];
+
       const eligiblePlayers = this.players.filter(
         (player) => !player.rules.includes(ruleToDistribute!)
       );
       if (eligiblePlayers.length > 0) {
-        let randomPlayer =
-          eligiblePlayers[Math.floor(Math.random() * eligiblePlayers.length)];
+        var rand: Rand = new Rand(this.seed + ruleToDistribute!.shortname);
+        var randIndex = Math.floor(rand.next() * eligiblePlayers.length);
+        let randomPlayer = eligiblePlayers[randIndex];
         randomPlayer.rules.push(ruleToDistribute!);
       }
     }
