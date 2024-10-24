@@ -190,7 +190,7 @@ describe('RULES INTEGRATED', () => {
         // Assert
         // points:
         // -- 3 red cards * 3 points = 9
-        // -- max red cards x2 = +9
+        // -- max red cards, x2 = +9
         // --> 18
         expect(points).toBe(18);
       });
@@ -301,4 +301,169 @@ describe('RULES INTEGRATED', () => {
 
     // todo: special functions like attack and defend
   });
+
+  describe('blue cards', () => {
+    describe('3 blue cards', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        blue: 3,
+      });
+      otherPlayers = [];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- 3 blue cards * 2 points = 6
+        expect(points).toBe(6);
+      });
+    });
+    describe('other one have 5 blues, no own red', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 0,
+      });
+      otherPlayers = [getPlayerCards({ blue: 5 })];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- attack from other player with 5 blues = -10
+        expect(points).toBe(-10);
+      });
+    });
+    describe('other one have 5 blues blues, no own red', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 0,
+      });
+      otherPlayers = [getPlayerCards({ blue: 6 }), getPlayerCards({ blue: 7 })];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- attack from other player with 5 blues x2 = -20
+        expect(points).toBe(-20);
+      });
+    });
+    describe('other one have 5 blues, 3 reds', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 3,
+      });
+      otherPlayers = [getPlayerCards({ blue: 5 })];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- attack defended
+        // -- 3 red * 3 pt = 9
+        // -- max reds, x2 = 9
+        // --> 15
+        expect(points).toBe(18);
+      });
+    });
+    describe('other one have 5 blues, 3 reds', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 3,
+      });
+      otherPlayers = [getPlayerCards({ blue: 5 }), getPlayerCards({ blue: 6 })];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- attack defended once = -10
+        // -- 3 red * 3 pt = 9
+        // -- max reds, x2 = 9
+        // --> 15
+        expect(points).toBe(8);
+      });
+    });
+  });
+
+  describe('pyramide', () => {
+    describe('first example', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 4,
+        blue: 3,
+        white: 2,
+        orange: 1,
+      });
+      otherPlayers = [];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- 4 red cards * 3 pts = 12
+        // -- most red cards, x2 = 12
+        // -- 3 blue cards * 2 pts = 6
+        // -- 2 white cards * 5 pts = 10
+        // -- 1 orange card * 4 pts = 4
+        // -- 3 blue quadruple one red = 12
+        // -- pyramide bonus EVERYTHINT x2
+        // 56*2 = 112
+        expect(points).toBe(112);
+      });
+    });
+  });
+
+  describe('set of five', () => {
+    describe('first example', () => {
+      // Arrange
+      playerCards = getPlayerCards({
+        red: 4,
+        blue: 3,
+        white: 2,
+        orange: 1,
+        yellow: 1,
+      });
+      otherPlayers = [getPlayerCards({ yellow: 4 })];
+
+      const results = evaluateAllRules(playerCards, otherPlayers);
+      it('should get right amount of total points', () => {
+        // Act
+        const points = calculateTotalPoints(results);
+
+        // Assert
+        // points:
+        // -- 4 red cards * 3 pts = 12
+        // -- most red cards, x2 = 12
+        // -- 3 blue cards * 2 pts = 6
+        // -- 2 white cards * 5 pts = 10
+        // -- 1 orange card * 4 pts = 4
+        // -- 3 blue quadruple one orange = 12
+        // -- 1 yellow card * 1 pt = 1
+        // -- set of 5 colors one = 10
+        // --> 67
+        expect(points).toBe(67);
+      });
+    });
+  });
 });
+
+// todo: dont calculate other people cards if disqualified

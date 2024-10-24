@@ -113,7 +113,7 @@ const evaluateBlueCardAttack = (
   const attacksLeft = Math.max(0, attacks - defends);
   let totalPointsDeducted = attacksLeft * 10;
 
-  return { operation: 'add', value: totalPointsDeducted, event: 'points' };
+  return { operation: 'add', value: -totalPointsDeducted, event: 'points' };
 };
 
 const evaluateSetOfFiveColors = (cards: PlayerCards): RuleResult => {
