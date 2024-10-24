@@ -1,55 +1,17 @@
-import { Injectable } from '@angular/core';
-import { PlayerCards } from './models/player-cards';
-import { Player } from './models/player';
 import Rand from 'rand-seed';
-import { ORIGINAL_RULES } from './game-rules/rule-desc';
-import { Rule } from './models/rule';
-import { shuffleArray } from './helper/shuffle-array';
+import { Player } from '../models/player';
+import { Rule } from '../models/rule';
 
 const MIN_RULES_PER_PLAYER = 2;
 
-@Injectable({ providedIn: 'root' })
-export class GameService {
-  seed: string = '';
-  players: Player[] = [];
-
-  startGame(playerNames: string[], seed: string = '') {
-    // Generate or get seed for rules
-    if (seed === '') {
-      seed = this.generateRandomSeed();
-    }
-    this.setSeed(seed);
-
-    // generate player objects
-    this.players = [];
-    for (let name of playerNames) {
-      let player = this.generatePlayer(name);
-      this.players.push(player);
-    }
-
-    this.distributeRules(ORIGINAL_RULES);
-  }
-
-  setSeed(seed: string) {
+export class RuleDistributor {
+  constructor(private players: Player[], private seed: string) {
+    this.players = players;
     this.seed = seed;
   }
 
-  isGameStarted() {
-    return this.players.length > 0;
-  }
-
-  generateRandomSeed() {
-    return Math.random().toString(36).substring(2, 15);
-  }
-
-  generatePlayer(name: string) {
-    let cards = new PlayerCards();
-    let player = new Player(name, [], cards);
-    return player;
-  }
-
-  distributeRules(rules: Rule[]): void {
-    const rand = new Rand(this.seed);
+  distributeRules(rules: Rule[], seed: string): void {
+    const rand = new Rand(seed);
     const MINIMUM_RULES_PER_PLAYER = 2;
     const usedRules = new Set<Rule>();
 
@@ -126,13 +88,5 @@ export class GameService {
         player.rules.push(rule);
       }
     }
-  }
-
-  evaluatePlayer(player: Player) {
-    let points = 0;
-    player.rules.forEach((rule) => {
-      // todo
-    });
-    return points;
   }
 }
