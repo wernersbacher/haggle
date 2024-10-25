@@ -10,19 +10,12 @@ export class GameService {
   seed: string = '';
   players: Player[] = [];
 
-  startGame(playerNames: string[], seed: string = '') {
+  startGame(seed: string = '') {
     // Generate or get seed for rules
     if (seed === '') {
       seed = generateRandomSeed();
     }
     this.seed = seed;
-
-    // generate player objects
-    this.players = [];
-    for (let name of playerNames) {
-      let player = new Player(name);
-      this.players.push(player);
-    }
 
     // distribute the rules to the players
     var distributor = new EqualRuleDistributor(

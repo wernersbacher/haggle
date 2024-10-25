@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,32 +8,43 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { Player } from '../models/player';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-player-input',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+  ],
   template: `
     <div>
       <form [formGroup]="form">
-        <button type="button" (click)="addPlayer()">Add</button>
         <ng-container
           formArrayName="players"
-          *ngFor="let player of players.controls; index as i"
-          ><p>
-            Player {{ i + 1 }}
+          *ngFor="let player of playerInputs.controls; index as i"
+        >
+          <mat-form-field>
+            <mat-label>Player {{ i + 1 }}</mat-label>
             <ng-container [formGroupName]="i">
-              <input formControlName="name" />
+              <input matInput formControlName="name" />
             </ng-container>
-          </p>
+          </mat-form-field>
         </ng-container>
       </form>
-      <button (click)="startGame()" [disabled]="!form.valid">Start Game</button>
     </div>
   `,
 })
-export class PlayerInputComponent {
-  @Output() startGameClicked = new EventEmitter<string[]>();
+export class PlayerInputComponent implements OnInit {
+  @Output() isFormValid = new EventEmitter<boolean>();
+  @Input() players: Player[] = [];
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -62,21 +73,34 @@ export class PlayerInputComponent {
     ),
   });
 
-  get players(): FormArray {
+  ngOnInit(): void {
+    this.form.valueChanges.subscribe(() => {
+      this.isFormValid.emit(this.form.valid);
+    });
+
+    this.isFormValid.emit(this.form.valid);
+  }
+
+  ngOnDestory(): void {
+    // todo: create unsub subject
+    this.isFormValid.unsubscribe();
+  }
+
+  get playerInputs(): FormArray {
     return this.form.get('players') as FormArray;
   }
 
   addPlayer(): void {
-    this.players.push(this.formBuilder.group({ name: '' }));
+    this.playerInputs.push(this.formBuilder.group({ name: '' }));
   }
 
-  startGame(): void {
-    if (this.form.valid) {
-      const playerNames = this.players.controls.map(
-        (control) => control.value.name
-      );
-      this.startGameClicked.emit(playerNames);
-    }
+  setPlayers(): void {
+    this.playerInputs.controls.forEach((control) => {
+      const name = control.value.name;
+      if (name.trim().length) {
+        this.players.push(new Player(control.value.name));
+      }
+    });
   }
 
   minimumTwoPlayersValidator(
