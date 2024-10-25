@@ -33,22 +33,35 @@ const TAB_INDEX_RESULT = 3;
   ],
   template: `
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #tabGroup>
-      <mat-tab label="Start" [disabled]="gameStarted">
+      <mat-tab label="Start">
         <mat-card appearance="outlined">
           <mat-card-content
             ><h3>Type in the players names.</h3></mat-card-content
           >
         </mat-card>
 
-        <button mat-raised-button type="button" (click)="onAddPlayerClicked()">
+        <button
+          mat-raised-button
+          type="button"
+          (click)="onAddPlayerClicked()"
+          [disabled]="gameStarted"
+        >
           Add
         </button>
         <button
           mat-raised-button
           (click)="onGameStartClicked()"
-          [disabled]="!playerFormValid"
+          [disabled]="!playerFormValid || gameStarted"
         >
           Start Game
+        </button>
+
+        <button
+          mat-raised-button
+          (click)="onRestartClicked()"
+          [disabled]="!gameStarted"
+        >
+          Restart game
         </button>
         <app-player-input
           #playerInput
@@ -86,11 +99,9 @@ const TAB_INDEX_RESULT = 3;
         ></app-card-input>
       </mat-tab>
       <mat-tab label="Result" [disabled]="!getGameFinished">
-        <div *ngIf="gameService.results">
-          <h3>Results:</h3>
-          <div *ngFor="let result of gameService.results">
-            <p>{{ result.player.name }}: {{ result.points }}</p>
-          </div>
+        <h3>Results:</h3>
+        <div *ngFor="let result of gameService.results">
+          <p>{{ result.player.name }}: {{ result.points }}</p>
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -123,6 +134,10 @@ export class MainGameComponent {
     this.playerInput!.setPlayers();
     this.gameService.startGame();
     this.tabGroup!.selectedIndex = TAB_INDEX_RULES;
+  }
+
+  onRestartClicked() {
+    this.gameService.restartGame();
   }
 
   calculateResult() {

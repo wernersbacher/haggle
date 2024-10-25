@@ -15,4 +15,8 @@ export class Player {
     this.rules = rules;
     this.cards = cards;
   }
+  reset() {
+    this.rules = [];
+    this.cards = new PlayerCards();
+  }
 }

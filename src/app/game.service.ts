@@ -10,6 +10,11 @@ export class GameService {
   seed: string = '';
   players: Player[] = [];
 
+  restartGame() {
+    this.players = [];
+    this.results = [];
+  }
+
   startGame(seed: string = '') {
     // Generate or get seed for rules
     if (seed === '') {
