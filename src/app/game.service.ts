@@ -4,11 +4,13 @@ import { ORIGINAL_RULES } from './game-rules/rule-desc';
 import { EqualRuleDistributor } from './game-rules/rule-distribution';
 import { generateRandomSeed } from './helper/seed';
 import { calculateTotalPoints, evaluateAllRules } from './game-rules/rules';
+import { CalcResult } from './player-results/calc-result';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
   seed: string = '';
   players: Player[] = [];
+  results: CalcResult[] = [];
 
   restartGame() {
     this.players = [];
@@ -37,8 +39,6 @@ export class GameService {
 
   // TODO: add interface and stuff
 
-  results: CalcResult[] = [];
-
   calculateResult() {
     let results: CalcResult[] = [];
     this.players.forEach((player) => {
@@ -48,12 +48,17 @@ export class GameService {
         .map((p) => p.cards);
       const ruleResults = evaluateAllRules(playerCards, otherPlayers);
       const points = calculateTotalPoints(ruleResults);
-      results.push({ player: player, points: points });
+      // collect used rules
+      let usedRules: Set<string> = new Set();
+      ruleResults.forEach((ruleResult) => {
+        ruleResult.ruleNames.forEach((ruleName) => usedRules.add(ruleName));
+      });
+
+      results.push({ player: player, ruleResults, points: points, usedRules });
     });
+
+    // sort results by points
+    results.sort((a, b) => b.points - a.points);
     this.results = results;
   }
-}
-interface CalcResult {
-  player: Player;
-  points: number;
 }

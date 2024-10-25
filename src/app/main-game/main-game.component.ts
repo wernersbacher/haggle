@@ -7,6 +7,7 @@ import { CardInputComponent } from '../card-input/card-input.component';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { PlayerResultsComponent } from '../player-results/player-results.component';
 
 /* TODOS:
  * todos nach projekt
@@ -30,10 +31,12 @@ const TAB_INDEX_RESULT = 3;
     MatTabsModule,
     MatButtonModule,
     MatCardModule,
+    PlayerResultsComponent,
   ],
   template: `
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #tabGroup>
       <mat-tab label="Start">
+        <!-- start tab -->
         <mat-card appearance="outlined">
           <mat-card-content
             ><h3>Type in the players names.</h3></mat-card-content
@@ -72,6 +75,7 @@ const TAB_INDEX_RESULT = 3;
         </app-player-input>
       </mat-tab>
       <mat-tab label="Rules" [disabled]="!gameStarted">
+        <!-- rules tab -->
         <mat-card appearance="outlined">
           <mat-card-content
             ><h3>
@@ -85,6 +89,7 @@ const TAB_INDEX_RESULT = 3;
         ></app-game-rules>
       </mat-tab>
       <mat-tab label="Cards" [disabled]="!gameStarted">
+        <!-- cards tab -->
         <mat-card appearance="outlined">
           <mat-card-content
             ><h3>Type in every players' cards</h3></mat-card-content
@@ -99,10 +104,10 @@ const TAB_INDEX_RESULT = 3;
         ></app-card-input>
       </mat-tab>
       <mat-tab label="Result" [disabled]="!getGameFinished">
-        <h3>Results:</h3>
-        <div *ngFor="let result of gameService.results">
-          <p>{{ result.player.name }}: {{ result.points }}</p>
-        </div>
+        <!-- results tab -->
+        <app-player-results
+          [calcResults]="gameService.results"
+        ></app-player-results>
       </mat-tab>
     </mat-tab-group>
   `,

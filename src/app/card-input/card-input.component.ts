@@ -52,27 +52,52 @@ import { MatInputModule } from '@angular/material/input';
         <mat-card-content>
           <mat-form-field class="card-input" appearance="fill">
             <mat-label>Red</mat-label>
-            <input matInput type="number" [(ngModel)]="player.cards.red" />
+            <input
+              matInput
+              min="0"
+              type="number"
+              [(ngModel)]="player.cards.red"
+            />
           </mat-form-field>
 
           <mat-form-field class="card-input" appearance="fill">
             <mat-label>yellow</mat-label>
-            <input matInput type="number" [(ngModel)]="player.cards.yellow" />
+            <input
+              matInput
+              min="0"
+              type="number"
+              [(ngModel)]="player.cards.yellow"
+            />
           </mat-form-field>
 
           <mat-form-field class="card-input" appearance="fill">
             <mat-label>blue</mat-label>
-            <input matInput type="number" [(ngModel)]="player.cards.blue" />
+            <input
+              matInput
+              min="0"
+              type="number"
+              [(ngModel)]="player.cards.blue"
+            />
           </mat-form-field>
 
           <mat-form-field class="card-input" appearance="fill">
             <mat-label>orange</mat-label>
-            <input matInput type="number" [(ngModel)]="player.cards.orange" />
+            <input
+              matInput
+              min="0"
+              type="number"
+              [(ngModel)]="player.cards.orange"
+            />
           </mat-form-field>
 
           <mat-form-field class="card-input" appearance="fill">
             <mat-label>white</mat-label>
-            <input matInput type="number" [(ngModel)]="player.cards.white" />
+            <input
+              matInput
+              min="0"
+              type="number"
+              [(ngModel)]="player.cards.white"
+            />
           </mat-form-field>
 
           <p>Total: {{ player.cards.total() }}</p>
