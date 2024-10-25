@@ -5,16 +5,43 @@ import { EqualRuleDistributor } from './game-rules/rule-distribution';
 import { generateRandomSeed } from './helper/seed';
 import { calculateTotalPoints, evaluateAllRules } from './game-rules/rules';
 import { CalcResult } from './player-results/calc-result';
+import { GameState } from './game-state';
+import { StateService } from './services/state-service';
+import { PlayerCards } from './models/player-cards';
+
+// TODO:
+// wie serialisiere ich die objekte automatsciH?
+//esserializer
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
-  seed: string = '';
-  players: Player[] = [];
-  results: CalcResult[] = [];
+  public state: GameState = { seed: '', players: [], results: [] };
+
+  constructor(private stateService: StateService) {
+    const state = this.stateService.loadState();
+    if (!state) {
+      return;
+    }
+    state.players = state.players.map((playerData: any) => {
+      let cards = new PlayerCards();
+      cards.blue = playerData.cards.blue;
+      cards.orange = playerData.cards.orange;
+      cards.red = playerData.cards.red;
+      cards.yellow = playerData.cards.yellow;
+      cards.white = playerData.cards.white;
+
+      return new Player(playerData.name, playerData.rules, new PlayerCards());
+    });
+    this.state = state;
+  }
+
+  saveGameState(): void {
+    this.stateService.saveState(this.state);
+  }
 
   restartGame() {
-    this.players = [];
-    this.results = [];
+    this.state.players = [];
+    this.state.results = [];
   }
 
   startGame(seed: string = '') {
@@ -22,28 +49,29 @@ export class GameService {
     if (seed === '') {
       seed = generateRandomSeed();
     }
-    this.seed = seed;
+    this.state.seed = seed;
 
     // distribute the rules to the players
     var distributor = new EqualRuleDistributor(
-      this.players,
+      this.state.players,
       ORIGINAL_RULES,
-      this.seed
+      this.state.seed
     );
     distributor.distributeRules();
+    this.saveGameState();
   }
 
   isGameStarted() {
-    return this.players.length > 0;
+    return this.state.players.length > 0;
   }
 
   // TODO: add interface and stuff
 
   calculateResult() {
     let results: CalcResult[] = [];
-    this.players.forEach((player) => {
+    this.state.players.forEach((player) => {
       const playerCards = player.cards;
-      const otherPlayers = this.players
+      const otherPlayers = this.state.players
         .filter((p) => p !== player)
         .map((p) => p.cards);
       const ruleResults = evaluateAllRules(playerCards, otherPlayers);
@@ -59,6 +87,6 @@ export class GameService {
 
     // sort results by points
     results.sort((a, b) => b.points - a.points);
-    this.results = results;
+    this.state.results = results;
   }
 }

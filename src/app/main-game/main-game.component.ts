@@ -69,7 +69,7 @@ const TAB_INDEX_RESULT = 3;
         <app-player-input
           #playerInput
           *ngIf="!gameStarted"
-          [players]="gameService.players"
+          [players]="gameService.state.players"
           (isFormValid)="playerFormValid = $event"
         >
         </app-player-input>
@@ -85,7 +85,7 @@ const TAB_INDEX_RESULT = 3;
         </mat-card>
         <app-game-rules
           *ngIf="gameStarted"
-          [players]="gameService.players"
+          [players]="gameService.state.players"
         ></app-game-rules>
       </mat-tab>
       <mat-tab label="Cards" [disabled]="!gameStarted">
@@ -100,13 +100,13 @@ const TAB_INDEX_RESULT = 3;
         </button>
         <app-card-input
           *ngIf="gameStarted"
-          [players]="gameService.players"
+          [players]="gameService.state.players"
         ></app-card-input>
       </mat-tab>
       <mat-tab label="Result" [disabled]="!getGameFinished">
         <!-- results tab -->
         <app-player-results
-          [calcResults]="gameService.results"
+          [calcResults]="gameService.state.results"
         ></app-player-results>
       </mat-tab>
     </mat-tab-group>
@@ -128,7 +128,7 @@ export class MainGameComponent {
   }
 
   get getGameFinished() {
-    return this.gameService.results.length > 0;
+    return this.gameService.state.results.length > 0;
   }
 
   onAddPlayerClicked() {
