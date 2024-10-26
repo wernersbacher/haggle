@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Player } from '../models/player';
 import { MatCardModule } from '@angular/material/card';
+import { Player } from '../../models/player';
 
 @Component({
   selector: 'app-game-rules',

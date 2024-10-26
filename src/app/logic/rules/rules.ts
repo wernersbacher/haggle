@@ -1,6 +1,6 @@
-import { findHighestNumbers } from '../helper/find-highest';
-import { PlayerCards } from '../models/player-cards';
-import { RuleResult } from './rules-types';
+import { findHighestNumbers } from '../../helper/find-highest';
+import { PlayerCards } from '../../models/player-cards';
+import { RuleResult } from '../../models/rules-types';
 
 // Define the basic values for each color
 const BASIC_VALUES = {

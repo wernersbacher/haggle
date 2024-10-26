@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameState } from '../game-state';
+import { GameState } from '../models/game-state';
 
 @Injectable({
   providedIn: 'root',

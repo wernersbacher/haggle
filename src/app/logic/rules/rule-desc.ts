@@ -1,5 +1,5 @@
-import { Dictionary } from '../helper/dictionary';
-import { Rule } from '../models/rule';
+import { Dictionary } from '../../helper/dictionary';
+import { Rule } from '../../models/rule';
 
 export const RULE_RESULT_DESC_ORIGINAL: Dictionary<{ description: string }> =
   {};

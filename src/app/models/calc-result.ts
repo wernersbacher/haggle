@@ -1,5 +1,5 @@
-import { RuleResult } from '../game-rules/rules-types';
-import { Player } from '../models/player';
+import { RuleResult } from './rules-types';
+import { Player } from './player';
 
 export interface CalcResult {
   player: Player;

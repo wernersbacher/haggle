@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { GameService } from './../game.service';
+import { GameService } from '../../services/game.service';
 import { Component, ViewChild } from '@angular/core';
 import { PlayerInputComponent } from '../player-input/player-input.component';
 import { GameRulesComponent } from '../game-rules/game-rules.component';

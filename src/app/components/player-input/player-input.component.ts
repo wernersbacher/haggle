@@ -3,15 +3,14 @@ import {
   FormBuilder,
   FormGroup,
   FormArray,
-  Validators,
   AbstractControl,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { Player } from '../models/player';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Player } from '../../models/player';
 
 @Component({
   selector: 'app-player-input',

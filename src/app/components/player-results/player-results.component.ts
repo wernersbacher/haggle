@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Player } from '../models/player';
 import { MatCardModule } from '@angular/material/card';
-import { CalcResult } from './calc-result';
-import { RULE_RESULT_DESC_ORIGINAL } from '../game-rules/rule-desc';
+import { CalcResult } from '../../models/calc-result';
 import { MatDividerModule } from '@angular/material/divider';
+import { RULE_RESULT_DESC_ORIGINAL } from '../../logic/rules/rule-desc';
 
 @Component({
   selector: 'app-player-results',

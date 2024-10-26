@@ -1,4 +1,4 @@
-import { CardColors, PlayerCards } from '../models/player-cards';
+import { CardColors, PlayerCards } from '../../models/player-cards';
 import {
   evaluateAllRules,
   calculateTotalPoints as calculateTotalPoints,
