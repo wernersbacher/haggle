@@ -13,14 +13,16 @@ import { StateService } from './state-service';
 import { PlayerCards } from '../models/player-cards';
 import { RuleSetRegistry } from '../logic/rules/rule-sets';
 
+const defaultState = {
+  seed: '',
+  ruleSetName: Array.from(RuleSetRegistry.values())[0].name, // first element is default - should be the same as on ui
+  players: [],
+  results: [],
+};
+
 @Injectable({ providedIn: 'root' })
 export class GameService {
-  public state: GameState = {
-    seed: '',
-    ruleSetName: Array.from(RuleSetRegistry.values())[0].name, // first element is default - should be the same as on ui
-    players: [],
-    results: [],
-  };
+  public state: GameState = defaultState;
 
   public currentRuleSet: RuleSet | undefined;
 
@@ -47,8 +49,7 @@ export class GameService {
   }
 
   restartGame() {
-    this.state.players = [];
-    this.state.results = [];
+    this.state = { ...defaultState, seed: this.state.seed };
   }
 
   startGame(seed: string = '') {
