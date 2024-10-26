@@ -5,5 +5,5 @@ export interface CalcResult {
   player: Player;
   ruleResults: RuleResult[];
   points: number;
-  usedRules: Set<string>;
+  usedRules: string[];
 }

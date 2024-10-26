@@ -58,7 +58,6 @@ export class GameService {
       this.state.seed
     );
     distributor.distributeRules();
-    this.saveGameState();
   }
 
   isGameStarted() {
@@ -77,9 +76,13 @@ export class GameService {
       const ruleResults = evaluateAllRules(playerCards, otherPlayers);
       const points = calculateTotalPoints(ruleResults);
       // collect used rules
-      let usedRules: Set<string> = new Set();
+      let usedRules: string[] = [];
       ruleResults.forEach((ruleResult) => {
-        ruleResult.ruleNames.forEach((ruleName) => usedRules.add(ruleName));
+        ruleResult.ruleNames.forEach((ruleName) => {
+          if (!usedRules.includes(ruleName)) {
+            usedRules.push(ruleName);
+          }
+        });
       });
 
       results.push({ player: player, ruleResults, points: points, usedRules });
@@ -88,5 +91,7 @@ export class GameService {
     // sort results by points
     results.sort((a, b) => b.points - a.points);
     this.state.results = results;
+
+    // save game
   }
 }

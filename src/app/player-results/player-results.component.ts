@@ -58,7 +58,9 @@ import { MatDividerModule } from '@angular/material/divider';
             <div *ngFor="let desc of rule_result_desc | keyvalue">
               <div
                 [ngClass]="
-                  result.usedRules.has(desc.key) ? 'rule-used' : 'rule-unused'
+                  result.usedRules.includes(desc.key)
+                    ? 'rule-used'
+                    : 'rule-unused'
                 "
               >
                 {{ desc.value.description }}

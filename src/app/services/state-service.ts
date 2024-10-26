@@ -22,7 +22,7 @@ export class StateService {
       if (!serializedState) {
         return null;
       }
-      const parsed = JSON.parse(serializedState);
+      const parsed = JSON.parse(serializedState) as GameState;
       return parsed;
     } catch (error) {
       console.error('Fehler beim Laden des Zustands:', error);

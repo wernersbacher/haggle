@@ -138,6 +138,7 @@ export class MainGameComponent {
   onGameStartClicked() {
     this.playerInput!.setPlayers();
     this.gameService.startGame();
+    this.gameService.saveGameState();
     this.tabGroup!.selectedIndex = TAB_INDEX_RULES;
   }
 
@@ -148,5 +149,6 @@ export class MainGameComponent {
   calculateResult() {
     this.gameService.calculateResult();
     this.tabGroup!.selectedIndex = TAB_INDEX_RESULT;
+    this.gameService.saveGameState();
   }
 }
