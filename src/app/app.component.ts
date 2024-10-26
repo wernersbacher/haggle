@@ -20,52 +20,15 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatButtonModule,
   ],
   template: `
-    <mat-drawer-container class="example-container" autosize>
-      <mat-drawer #drawer class="example-sidenav" mode="side">
-        <nav>
-          <a
-            class="button"
-            routerLink="/main"
-            routerLinkActive="activebutton"
-            ariaCurrentWhenActive="page"
-          >
-            Main Page
-          </a>
-        </nav>
-      </mat-drawer>
-
-      <div class="example-sidenav-content">
-        <mat-toolbar>
-          <button
-            mat-icon-button
-            class="example-icon"
-            aria-label="Example icon-button with menu icon"
-            (click)="drawer.toggle()"
-          >
-            <mat-icon>menu</mat-icon>
-          </button>
-          <span>My App</span>
-          <span class="example-spacer"></span>
-          <button
-            mat-icon-button
-            class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon"
-          >
-            <mat-icon>favorite</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            class="example-icon"
-            aria-label="Example icon-button with share icon"
-          >
-            <mat-icon>share</mat-icon>
-          </button>
-        </mat-toolbar>
-        <div class="main-content">
-          <router-outlet></router-outlet>
-        </div>
+    <div class="example-sidenav-content">
+      <mat-toolbar>
+        <span>Haggle v0.1</span>
+        <span class="example-spacer"></span>
+      </mat-toolbar>
+      <div class="main-content">
+        <router-outlet></router-outlet>
       </div>
-    </mat-drawer-container>
+    </div>
   `,
   styles: [
     `
