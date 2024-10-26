@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { CalcResult } from '../../models/calc-result';
 import { MatDividerModule } from '@angular/material/divider';
-import { RULE_RESULT_DESC_ORIGINAL } from '../../logic/rules/rule-desc';
+import { RULE_RESULT_DESC_ORIGINAL } from '../../logic/rules/ORIGINAL_EN/rule-desc';
 
 @Component({
   selector: 'app-player-results',

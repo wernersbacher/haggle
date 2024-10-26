@@ -1,6 +1,6 @@
-import { Player } from '../../models/player';
-import { PlayerCards } from '../../models/player-cards';
-import { Rule } from '../../models/rule';
+import { Player } from '../../../models/player';
+import { PlayerCards } from '../../../models/player-cards';
+import { Rule } from '../../../models/rule';
 import { EqualRuleDistributor, RuleDistributor } from './rule-distribution';
 
 describe('GameService', () => {

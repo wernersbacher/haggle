@@ -1,6 +1,8 @@
 import Rand from 'rand-seed';
-import { Player } from '../../models/player';
-import { Rule } from '../../models/rule';
+import { Player } from '../../../models/player';
+import { Rule } from '../../../models/rule';
+import { Dictionary } from '../../../helper/dictionary';
+import { RuleDescription } from '../../../models/rule-desc';
 
 const MIN_RULES_PER_PLAYER = 2;
 
@@ -11,7 +13,7 @@ export interface RuleDistributor {
 export class EqualRuleDistributor implements RuleDistributor {
   constructor(
     private players: Player[],
-    private rules: Rule[],
+    private rules: Dictionary<RuleDescription>,
     private seed: string
   ) {
     this.players = players;
