@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { CalcResult } from '../../models/calc-result';
 import { MatDividerModule } from '@angular/material/divider';
-import { RULE_RESULT_DESC_ORIGINAL } from '../../logic/rules/ORIGINAL_EN/rule-desc';
+import { Dictionary } from '../../helper/dictionary';
 
 @Component({
   selector: 'app-player-results',
@@ -64,7 +64,7 @@ import { RULE_RESULT_DESC_ORIGINAL } from '../../logic/rules/ORIGINAL_EN/rule-de
               <span>{{ result.player.cards.white }}</span>
             </div>
             <ng-container *ngIf="showResultDetails">
-              <div *ngFor="let desc of rule_result_desc | keyvalue">
+              <div *ngFor="let desc of rule_set_explanations | keyvalue">
                 <div
                   [ngClass]="
                     result.usedRules.includes(desc.key)
@@ -88,8 +88,7 @@ import { RULE_RESULT_DESC_ORIGINAL } from '../../logic/rules/ORIGINAL_EN/rule-de
 export class PlayerResultsComponent {
   @Input() calcResults: CalcResult[] = [];
   @Input() showResultDetails = false;
-
-  public usedRules: string[] = [];
-
-  rule_result_desc = RULE_RESULT_DESC_ORIGINAL;
+  @Input() rule_set_explanations:
+    | Dictionary<{ description: string }>
+    | undefined;
 }

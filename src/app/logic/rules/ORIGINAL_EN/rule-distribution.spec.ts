@@ -1,7 +1,7 @@
 import { Player } from '../../../models/player';
 import { PlayerCards } from '../../../models/player-cards';
 import { GameRule } from '../../../models/rule';
-import { EqualRuleDistributor, RuleDistributor } from './rule-distribution';
+import { EqualRuleDistributor, RuleDistributor } from '../rule-distribution';
 
 describe('GameService', () => {
   let distributor: RuleDistributor;

@@ -1,6 +1,7 @@
+import { RuleSet } from './../logic/rules/rule-sets';
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player';
-import { EqualRuleDistributor } from '../logic/rules/ORIGINAL_EN/rule-distribution';
+import { EqualRuleDistributor } from '../logic/rules/rule-distribution';
 import { generateRandomSeed } from '../helper/seed';
 import {
   calculateTotalPoints,
@@ -10,15 +11,18 @@ import { CalcResult } from '../models/calc-result';
 import { GameState } from '../models/game-state';
 import { StateService } from './state-service';
 import { PlayerCards } from '../models/player-cards';
-import { ORIGINAL_RULES } from '../logic/rules/ORIGINAL_EN/rule-desc';
-
-// TODO:
-// wie serialisiere ich die objekte automatsciH?
-//esserializer
+import { RuleSetRegistry } from '../logic/rules/rule-sets';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
-  public state: GameState = { seed: '', players: [], results: [] };
+  public state: GameState = {
+    seed: '',
+    ruleSetName: Array.from(RuleSetRegistry.values())[0].name, // first element is default - should be the same as on ui
+    players: [],
+    results: [],
+  };
+
+  public currentRuleSet: RuleSet | undefined;
 
   constructor(private stateService: StateService) {
     const state = this.stateService.loadState();
@@ -54,10 +58,12 @@ export class GameService {
     }
     this.state.seed = seed;
 
+    this.currentRuleSet = RuleSetRegistry.get(this.state.ruleSetName);
+
     // distribute the rules to the players
     var distributor = new EqualRuleDistributor(
       this.state.players,
-      ORIGINAL_RULES,
+      this.currentRuleSet!.rulesHandedOut,
       this.state.seed
     );
     distributor.distributeRules();

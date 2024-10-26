@@ -8,6 +8,8 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { PlayerResultsComponent } from '../player-results/player-results.component';
+import { MatSelectModule } from '@angular/material/select';
+import { RuleSetRegistry } from '../../logic/rules/rule-sets';
 
 /* TODOS:
  * keine doppelten namen?
@@ -31,6 +33,7 @@ const TAB_INDEX_RESULT = 3;
     MatButtonModule,
     MatCardModule,
     PlayerResultsComponent,
+    MatSelectModule,
   ],
   template: `
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" #tabGroup>
@@ -42,30 +45,44 @@ const TAB_INDEX_RESULT = 3;
             <h3 *ngIf="gameStarted">They game is already in progress!</h3>
           </mat-card-content>
         </mat-card>
+        <div>
+          <button
+            mat-raised-button
+            type="button"
+            (click)="onAddPlayerClicked()"
+            [disabled]="gameStarted"
+          >
+            Add
+          </button>
+          <button
+            mat-raised-button
+            (click)="onGameStartClicked()"
+            [disabled]="!playerFormValid || gameStarted"
+          >
+            Start Game
+          </button>
 
-        <button
-          mat-raised-button
-          type="button"
-          (click)="onAddPlayerClicked()"
-          [disabled]="gameStarted"
-        >
-          Add
-        </button>
-        <button
-          mat-raised-button
-          (click)="onGameStartClicked()"
-          [disabled]="!playerFormValid || gameStarted"
-        >
-          Start Game
-        </button>
+          <button
+            mat-raised-button
+            (click)="onRestartClicked()"
+            [disabled]="!gameStarted"
+          >
+            Restart game
+          </button>
+        </div>
 
-        <button
-          mat-raised-button
-          (click)="onRestartClicked()"
-          [disabled]="!gameStarted"
-        >
-          Restart game
-        </button>
+        <mat-form-field *ngIf="!gameStarted">
+          <mat-label>Ruleset</mat-label>
+          <mat-select
+            [value]="ruleSets[0].name"
+            (selectionChange)="gameService.state.ruleSetName = $event.value"
+          >
+            @for (ruleSet of ruleSets; track ruleSet) {
+            <mat-option [value]="ruleSet.name">{{ ruleSet.title }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
         <app-player-input
           #playerInput
           *ngIf="!gameStarted"
@@ -119,6 +136,9 @@ const TAB_INDEX_RESULT = 3;
         <app-player-results
           [calcResults]="gameService.state.results"
           [showResultDetails]="showResultDetails"
+          [rule_set_explanations]="
+            gameService.currentRuleSet?.rulesUsedExplanation
+          "
         ></app-player-results>
       </mat-tab>
     </mat-tab-group>
@@ -135,6 +155,10 @@ export class MainGameComponent {
 
   public playerFormValid = false;
   public showResultDetails = false;
+
+  public ruleSets = Array.from(RuleSetRegistry.values()).map(
+    (ruleSet) => ruleSet
+  );
 
   get gameStarted() {
     return this.gameService.isGameStarted();

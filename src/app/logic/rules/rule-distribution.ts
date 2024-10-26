@@ -1,6 +1,6 @@
 import Rand from 'rand-seed';
-import { Player } from '../../../models/player';
-import { GameRule } from '../../../models/rule';
+import { Player } from '../../models/player';
+import { GameRule } from '../../models/rule';
 
 const MIN_RULES_PER_PLAYER = 2;
 
