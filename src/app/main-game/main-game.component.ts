@@ -10,12 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import { PlayerResultsComponent } from '../player-results/player-results.component';
 
 /* TODOS:
- * todos nach projekt
- * restart
- * reset results -> restart?
- * tabindex in state speichern
- * seed einarbeiten
  * keine doppelten namen?
+ * restart game -> invalidate -> dont reset names? -> reset current game
+ * componenten aufräumen
  */
 
 const TAB_INDEX_START = 0;
@@ -40,9 +37,10 @@ const TAB_INDEX_RESULT = 3;
       <mat-tab label="Start">
         <!-- start tab -->
         <mat-card appearance="outlined">
-          <mat-card-content
-            ><h3>Type in the players names.</h3></mat-card-content
-          >
+          <mat-card-content>
+            <h3 *ngIf="!gameStarted">Type in the players names.</h3>
+            <h3 *ngIf="gameStarted">They game is already in progress!</h3>
+          </mat-card-content>
         </mat-card>
 
         <button
@@ -85,6 +83,9 @@ const TAB_INDEX_RESULT = 3;
             </h3></mat-card-content
           >
         </mat-card>
+        <button mat-raised-button (click)="navgiateToCardsTab()">
+          Okay, now type in the players cards
+        </button>
         <app-game-rules
           *ngIf="gameStarted"
           [players]="gameService.state.players"
@@ -98,7 +99,7 @@ const TAB_INDEX_RESULT = 3;
           >
         </mat-card>
         <button mat-raised-button (click)="calculateResult()">
-          Calculate Results
+          Calculate Results!
         </button>
         <app-card-input
           *ngIf="gameStarted"
@@ -108,8 +109,16 @@ const TAB_INDEX_RESULT = 3;
       </mat-tab>
       <mat-tab label="Results" [disabled]="!getGameFinished">
         <!-- results tab -->
+
+        <button
+          mat-raised-button
+          (click)="showResultDetails = !showResultDetails"
+        >
+          Toggle detailed view
+        </button>
         <app-player-results
           [calcResults]="gameService.state.results"
+          [showResultDetails]="showResultDetails"
         ></app-player-results>
       </mat-tab>
     </mat-tab-group>
@@ -125,6 +134,7 @@ export class MainGameComponent {
     | undefined;
 
   public playerFormValid = false;
+  public showResultDetails = false;
 
   get gameStarted() {
     return this.gameService.isGameStarted();
@@ -147,6 +157,10 @@ export class MainGameComponent {
 
   onRestartClicked() {
     this.gameService.restartGame();
+  }
+
+  navgiateToCardsTab() {
+    this.tabGroup!.selectedIndex = TAB_INDEX_CARDS;
   }
 
   calculateResult() {

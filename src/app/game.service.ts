@@ -89,7 +89,13 @@ export class GameService {
     });
 
     // sort results by points
-    results.sort((a, b) => b.points - a.points);
+    // sort them by amount of cards as second criteria
+    results.sort((a, b) => {
+      if (a.points === b.points) {
+        return a.player.cards.total() - b.player.cards.total();
+      }
+      return b.points - a.points;
+    });
     this.state.results = results;
 
     // save game

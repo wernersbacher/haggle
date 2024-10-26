@@ -13,15 +13,24 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [CommonModule, FormsModule, MatCardModule, MatDividerModule],
   styles: [
     `
-      .rules-card-container {
+      .result-card-container {
         display: flex;
         flex-direction: row;
         margin-top: 20px;
         flex-wrap: wrap;
       }
-      .rule-card {
+      .result-card {
         width: 400px;
         margin: 10px;
+      }
+      .result-card-1 {
+        background-color: gold;
+      }
+      .result-card-2 {
+        background-color: silver;
+      }
+      .result-card-3 {
+        background-color: peru;
       }
     `,
     `
@@ -35,38 +44,40 @@ import { MatDividerModule } from '@angular/material/divider';
     `,
   ],
   template: `
-    <div class="rules-card-container">
+    <div class="result-card-container">
       <div *ngFor="let result of calcResults; let i = index">
-        <mat-card class="rule-card">
+        <mat-card class="result-card result-card-{{ i + 1 }}">
           <mat-card-header>
             <mat-card-title-group>
               <mat-card-title
-                >Result {{ i + 1 }} ({{ result.player.name }})</mat-card-title
+                >Position {{ i + 1 }} ({{ result.player.name }})</mat-card-title
               >
             </mat-card-title-group>
           </mat-card-header>
           <mat-card-content>
-            Points: {{ result.points }}
+            Points: <b>{{ result.points }}</b>
             <div>
-              Red: <span>{{ result.player.cards.red }}</span> Yellow:
-              <span>{{ result.player.cards.yellow }}</span> Blue:
-              <span>{{ result.player.cards.blue }}</span> Orange:
-              <span>{{ result.player.cards.orange }}</span> White:
+              Red: <span>{{ result.player.cards.red }}</span
+              >, Yellow: <span>{{ result.player.cards.yellow }}</span
+              >, Blue: <span>{{ result.player.cards.blue }}</span
+              >, Orange: <span>{{ result.player.cards.orange }}</span
+              >, White:
               <span>{{ result.player.cards.white }}</span>
             </div>
-
-            <div *ngFor="let desc of rule_result_desc | keyvalue">
-              <div
-                [ngClass]="
-                  result.usedRules.includes(desc.key)
-                    ? 'rule-used'
-                    : 'rule-unused'
-                "
-              >
-                {{ desc.value.description }}
+            <ng-container *ngIf="showResultDetails">
+              <div *ngFor="let desc of rule_result_desc | keyvalue">
+                <div
+                  [ngClass]="
+                    result.usedRules.includes(desc.key)
+                      ? 'rule-used'
+                      : 'rule-unused'
+                  "
+                >
+                  {{ desc.value.description }}
+                </div>
+                <mat-divider></mat-divider>
               </div>
-              <mat-divider></mat-divider>
-            </div>
+            </ng-container>
           </mat-card-content>
         </mat-card>
       </div>
@@ -77,6 +88,7 @@ import { MatDividerModule } from '@angular/material/divider';
 // todo: list resultelemtns if points != 0 oder rules
 export class PlayerResultsComponent {
   @Input() calcResults: CalcResult[] = [];
+  @Input() showResultDetails = false;
 
   public usedRules: string[] = [];
 
