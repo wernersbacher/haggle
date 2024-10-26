@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player';
-import { ORIGINAL_RULES } from '../logic/rules/rule-desc';
-import { EqualRuleDistributor } from '../logic/rules/rule-distribution';
+import { EqualRuleDistributor } from '../logic/rules/ORIGINAL_EN/rule-distribution';
 import { generateRandomSeed } from '../helper/seed';
-import { calculateTotalPoints, evaluateAllRules } from '../logic/rules/rules';
+import {
+  calculateTotalPoints,
+  evaluateAllRules,
+} from '../logic/rules/ORIGINAL_EN/rules';
 import { CalcResult } from '../models/calc-result';
 import { GameState } from '../models/game-state';
 import { StateService } from './state-service';
 import { PlayerCards } from '../models/player-cards';
+import { ORIGINAL_RULES } from '../logic/rules/ORIGINAL_EN/rule-desc';
 
 // TODO:
 // wie serialisiere ich die objekte automatsciH?

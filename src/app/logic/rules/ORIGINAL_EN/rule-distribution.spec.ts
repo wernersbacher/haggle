@@ -1,6 +1,6 @@
 import { Player } from '../../../models/player';
 import { PlayerCards } from '../../../models/player-cards';
-import { Rule } from '../../../models/rule';
+import { GameRule } from '../../../models/rule';
 import { EqualRuleDistributor, RuleDistributor } from './rule-distribution';
 
 describe('GameService', () => {
@@ -11,8 +11,8 @@ describe('GameService', () => {
     return playerNames.map((name) => new Player(name, [], new PlayerCards()));
   }
 
-  function generateMockRules(count: number): Rule[] {
-    let rules: Rule[] = [];
+  function generateMockRules(count: number): GameRule[] {
+    let rules: GameRule[] = [];
     for (let i = 1; i <= count; i++) {
       rules.push({ shortname: `R${i}`, description: `Rule ${i}` });
     }

@@ -1,8 +1,6 @@
 import Rand from 'rand-seed';
 import { Player } from '../../../models/player';
-import { Rule } from '../../../models/rule';
-import { Dictionary } from '../../../helper/dictionary';
-import { RuleDescription } from '../../../models/rule-desc';
+import { GameRule } from '../../../models/rule';
 
 const MIN_RULES_PER_PLAYER = 2;
 
@@ -13,7 +11,7 @@ export interface RuleDistributor {
 export class EqualRuleDistributor implements RuleDistributor {
   constructor(
     private players: Player[],
-    private rules: Dictionary<RuleDescription>,
+    private rules: GameRule[],
     private seed: string
   ) {
     this.players = players;
@@ -23,7 +21,7 @@ export class EqualRuleDistributor implements RuleDistributor {
 
   distributeRules(): void {
     const rand = new Rand(this.seed);
-    const usedRules = new Set<Rule>();
+    const usedRules = new Set<GameRule>();
 
     let minimumRulesAPlayerCurrentlyHas = this.getMinimumRulesPerPlayer();
 
@@ -60,8 +58,8 @@ export class EqualRuleDistributor implements RuleDistributor {
   }
 
   private distributeRuleToPlayerWithLeastRules(
-    rule: Rule,
-    usedRules: Set<Rule>,
+    rule: GameRule,
+    usedRules: Set<GameRule>,
     minimumRulesAPlayerCurrentlyHas: number
   ): number {
     const eligiblePlayers = this.players.filter(
@@ -76,12 +74,12 @@ export class EqualRuleDistributor implements RuleDistributor {
     return this.getMinimumRulesPerPlayer();
   }
 
-  private getRandomRule(rules: Rule[], rand: Rand): Rule {
+  private getRandomRule(rules: GameRule[], rand: Rand): GameRule {
     const randIndex = Math.floor(rand.next() * rules.length);
     return rules[randIndex];
   }
 
-  private balanceRulesAmongPlayers(rules: Rule[]): void {
+  private balanceRulesAmongPlayers(rules: GameRule[]): void {
     const rulesPerPlayer = this.players[0].rules.length;
     this.players.forEach((player) => {
       if (player.rules.length < rulesPerPlayer) {
@@ -90,7 +88,7 @@ export class EqualRuleDistributor implements RuleDistributor {
     });
   }
 
-  private addMissingRulesToPlayer(player: Player, rules: Rule[]): void {
+  private addMissingRulesToPlayer(player: Player, rules: GameRule[]): void {
     const rand = new Rand(this.seed + player.name);
     while (player.rules.length < this.players[0].rules.length) {
       const rule = this.getRandomRule(rules, rand);

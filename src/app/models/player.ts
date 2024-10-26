@@ -1,14 +1,14 @@
 import { PlayerCards } from './player-cards';
-import { Rule } from './rule';
+import { GameRule } from './rule';
 
 export class Player {
   name: string;
-  rules: Rule[];
+  rules: GameRule[];
   cards: PlayerCards;
 
   constructor(
     name: string,
-    rules: Rule[] = [],
+    rules: GameRule[] = [],
     cards: PlayerCards = new PlayerCards()
   ) {
     this.name = name;

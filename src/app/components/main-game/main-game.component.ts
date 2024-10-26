@@ -12,6 +12,7 @@ import { PlayerResultsComponent } from '../player-results/player-results.compone
 /* TODOS:
  * keine doppelten namen?
  * restart game -> invalidate -> dont reset names? -> reset current game
+ * results outdated -> hide results
  */
 
 const TAB_INDEX_START = 0;

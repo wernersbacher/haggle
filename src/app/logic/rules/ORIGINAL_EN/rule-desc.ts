@@ -1,8 +1,12 @@
-import { Dictionary, DictionaryTyped } from '../../../helper/dictionary';
+import { Dictionary } from '../../../helper/dictionary';
+import { GameRule } from '../../../models/rule';
+import { RuleDescription } from '../../../models/rule-desc';
 
-export const RULE_RESULT_DESC_ORIGINAL: Dictionary<{ description: string }> =
-  {};
+export const RULE_RESULT_DESC_ORIGINAL: Dictionary<RuleDescription> = {};
 
+/**
+ * The rules used in the explanation of the game result
+ */
 RULE_RESULT_DESC_ORIGINAL['1orange_base'] = {
   description: 'Orangene Karten haben einen Basiswert von 4',
 };
@@ -67,60 +71,79 @@ RULE_RESULT_DESC_ORIGINAL['rule15'] = {
     'No more than thirteen cards in a hand can be scored. If more are handed in, the excess will be removed at random.',
 };
 
-export const RULES_ORIGINAL: DictionaryTyped<RuleDescription> = {};
-
-RULES_ORIGINAL['rule1'] = {
-  description: 'Orange-Karten haben einen Basiswert von 4',
-};
-RULES_ORIGINAL['rule2'] = {
-  description:
-    'Weiße Karten haben die höchste Wertigkeit und sind gleichwertig mit einer roten und einer blauen Karte',
-};
-RULES_ORIGINAL['rule3'] = {
-  description:
-    'Blaue Karten haben doppelt so viel Wert wie gelbe und halb so viel wie orange',
-};
-RULES_ORIGINAL['rule4'] = {
-  description:
-    'Wenn mehr als 3 weiße Karten, verlieren alle weißen Karten ihren Wert',
-};
-RULES_ORIGINAL['rule5'] = {
-  description:
-    'Ein Spieler kann nur so viele Orange-Karten zählen, wie er blaue hat',
-};
-RULES_ORIGINAL['rule6'] = {
-  description:
-    'Wenn ein Spieler 5 oder mehr blaue Karten hat, werden anderen Spielern 10 Punkte abgezogen',
-};
-RULES_ORIGINAL['rule7'] = {
-  description:
-    'A set of three red cards protects you from one set of five blue cards.',
-};
-RULES_ORIGINAL['rule8'] = {
-  description:
-    'Der Spieler mit den meisten gelben Karten bekommt pointspunkte, außer jemand andere hat allein mehr gelbe Karten',
-};
-RULES_ORIGINAL['rule9'] = {
-  description:
-    'Wenn ein Spieler 7 oder mehr Karten derselben Farbe hat, wird er disqualifiziert',
-};
-RULES_ORIGINAL['rule10'] = {
-  description: 'Jedes Set von 5 verschiedenen Farben gibt 10 Punkte',
-};
-RULES_ORIGINAL['rule11'] = {
-  description: '"Pyramide" (4-3-2-1 Karten) verdoppelt den Wert',
-};
-RULES_ORIGINAL['rule12'] = {
-  description: 'Der Spieler mit den meisten roten Karten verdoppelt deren Wert',
-};
-RULES_ORIGINAL['rule13'] = {
-  description: 'Jeweils zwei gelbe Karten verdoppeln eine weiße Karte',
-};
-RULES_ORIGINAL['rule14'] = {
-  description:
-    'Jeweils 3 blaue Karten vervierfachen den Wert einer orangefarbenen Karte',
-};
-RULES_ORIGINAL['rule15'] = {
-  description:
-    'No more than thirteen cards in a hand can be scored. If more are handed in, the excess will be removed at random.',
-};
+/**
+ * The list of rules players get assigned to - these are handed out
+ */
+export const ORIGINAL_RULES: GameRule[] = [
+  {
+    shortname: 'rule1',
+    description: 'Orange-Karten haben einen Basiswert von 4',
+  },
+  {
+    shortname: 'rule2',
+    description:
+      'Weiße Karten haben die höchste Wertigkeit und sind gleichwertig mit einer roten und einer blauen Karte',
+  },
+  {
+    shortname: 'rule3',
+    description:
+      'Blaue Karten haben doppelt so viel Wert wie gelbe und halb so viel wie orange',
+  },
+  {
+    shortname: 'rule4',
+    description:
+      'Wenn mehr als 3 weiße Karten, verlieren alle weißen Karten ihren Wert',
+  },
+  {
+    shortname: 'rule5',
+    description:
+      'Ein Spieler kann nur so viele Orange-Karten zählen, wie er blaue hat',
+  },
+  {
+    shortname: 'rule6',
+    description:
+      'Wenn ein Spieler 5 oder mehr blaue Karten hat, werden anderen Spielern 10 Punkte abgezogen',
+  },
+  {
+    shortname: 'rule7',
+    description:
+      'A set of three red cards protects you from one set of five blue cards.',
+  },
+  {
+    shortname: 'rule8',
+    description:
+      'Der Spieler mit den meisten gelben Karten bekommt pointspunkte, außer jemand andere hat allein mehr gelbe Karten',
+  },
+  {
+    shortname: 'rule9',
+    description:
+      'Wenn ein Spieler 7 oder mehr Karten derselben Farbe hat, wird er disqualifiziert',
+  },
+  {
+    shortname: 'rule10',
+    description: 'Jedes Set von 5 verschiedenen Farben gibt 10 Punkte',
+  },
+  {
+    shortname: 'rule11',
+    description: '"Pyramide" (4-3-2-1 Karten) verdoppelt den Wert',
+  },
+  {
+    shortname: 'rule12',
+    description:
+      'Der Spieler mit den meisten roten Karten verdoppelt deren Wert',
+  },
+  {
+    shortname: 'rule13',
+    description: 'Jeweils zwei gelbe Karten verdoppeln eine weiße Karte',
+  },
+  {
+    shortname: 'rule14',
+    description:
+      'Jeweils 3 blaue Karten vervierfachen den Wert einer orangefarbenen Karte',
+  },
+  {
+    shortname: 'rule15',
+    description:
+      'No more than thirteen cards in a hand can be scored. If more are handed in, the excess will be removed at random.',
+  },
+];

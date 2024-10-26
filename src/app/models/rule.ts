@@ -1,4 +1,4 @@
-export interface Rule {
+export interface GameRule {
   shortname: string;
   description: string;
 }
