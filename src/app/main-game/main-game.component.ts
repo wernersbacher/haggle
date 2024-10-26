@@ -12,7 +12,9 @@ import { PlayerResultsComponent } from '../player-results/player-results.compone
 /* TODOS:
  * todos nach projekt
  * restart
- * design
+ * reset results -> restart?
+ * tabindex in state speichern
+ * seed einarbeiten
  * keine doppelten namen?
  */
 
@@ -101,9 +103,10 @@ const TAB_INDEX_RESULT = 3;
         <app-card-input
           *ngIf="gameStarted"
           [players]="gameService.state.players"
+          (cardsChanged)="gameService.saveGameState()"
         ></app-card-input>
       </mat-tab>
-      <mat-tab label="Result" [disabled]="!getGameFinished">
+      <mat-tab label="Results" [disabled]="!getGameFinished">
         <!-- results tab -->
         <app-player-results
           [calcResults]="gameService.state.results"

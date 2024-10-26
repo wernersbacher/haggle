@@ -11,6 +11,7 @@ export class StateService {
     try {
       const serializedState = JSON.stringify(state);
       localStorage.setItem(this.storageKey, serializedState);
+      console.log('Saved game state to local storage.');
     } catch (error) {
       console.error('Fehler beim Speichern des Zustands:', error);
     }
@@ -23,6 +24,7 @@ export class StateService {
         return null;
       }
       const parsed = JSON.parse(serializedState) as GameState;
+      console.log('Read game state from local storage.');
       return parsed;
     } catch (error) {
       console.error('Fehler beim Laden des Zustands:', error);

@@ -30,7 +30,7 @@ export class GameService {
       cards.yellow = playerData.cards.yellow;
       cards.white = playerData.cards.white;
 
-      return new Player(playerData.name, playerData.rules, new PlayerCards());
+      return new Player(playerData.name, playerData.rules, cards);
     });
     this.state = state;
   }

@@ -1,4 +1,12 @@
-import { Component, Input } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { Player } from '../models/player';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -54,6 +62,7 @@ import { MatInputModule } from '@angular/material/input';
             <mat-label>Red</mat-label>
             <input
               matInput
+              (blur)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.red"
@@ -64,6 +73,7 @@ import { MatInputModule } from '@angular/material/input';
             <mat-label>yellow</mat-label>
             <input
               matInput
+              (blur)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.yellow"
@@ -74,6 +84,7 @@ import { MatInputModule } from '@angular/material/input';
             <mat-label>blue</mat-label>
             <input
               matInput
+              (blur)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.blue"
@@ -84,6 +95,7 @@ import { MatInputModule } from '@angular/material/input';
             <mat-label>orange</mat-label>
             <input
               matInput
+              (blur)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.orange"
@@ -94,6 +106,7 @@ import { MatInputModule } from '@angular/material/input';
             <mat-label>white</mat-label>
             <input
               matInput
+              (blur)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.white"
@@ -108,4 +121,5 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class CardInputComponent {
   @Input() players: Player[] = [];
+  @Output() cardsChanged: EventEmitter<void> = new EventEmitter<void>();
 }
