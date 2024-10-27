@@ -29,16 +29,6 @@ jobs:
     - name: Build
       run: npm run build
       
-    - name: SFTP Deploy
-      uses: Dylan700/sftp-upload-action@latest
-      with:
-        server: ${{secrets.SERVER_ADDRESS}}
-        username: ${{secrets.SERVER_USER}}
-        password: ${{secrets.SERVER_PASSWORD}}
-        port: 22
-        uploads: |
-          ./dist => ./web/mw95.de/haggle
-
     - name: "Deploy"
       uses: milanmk/actions-file-deployer@master
       with:
