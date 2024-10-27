@@ -12,24 +12,23 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
+      
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22
         cache: 'npm'
-    - run: npm ci
-    - name: Install Angular CLI
-      run: npm install -g @angular/cli # Install Angular CLI in the workflow environment
-    - name: Build Angular app
-      run: ng build --configuration production
+        cache-dependency-path: package-lock.json
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build
+      run: npm run build
+      
     - name: SFTP Deploy
       uses: Dylan700/sftp-upload-action@latest
       with:
