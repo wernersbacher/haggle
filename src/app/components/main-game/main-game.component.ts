@@ -121,7 +121,7 @@ const TAB_INDEX_RESULT = 3;
         <app-card-input
           *ngIf="gameStarted"
           [players]="gameService.state.players"
-          (cardsChanged)="gameService.saveGameState()"
+          (cardsChanged)="onCardsChanged()"
         ></app-card-input>
       </mat-tab>
       <mat-tab label="Results" [disabled]="!getGameFinished">
@@ -185,6 +185,11 @@ export class MainGameComponent {
 
   navgiateToCardsTab() {
     this.tabGroup!.selectedIndex = TAB_INDEX_CARDS;
+  }
+
+  onCardsChanged() {
+    this.gameService.resetResults();
+    this.gameService.saveGameState();
   }
 
   calculateResult() {

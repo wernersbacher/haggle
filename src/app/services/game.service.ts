@@ -107,7 +107,9 @@ export class GameService {
       return b.points - a.points;
     });
     this.state.results = results;
+  }
 
-    // save game
+  resetResults() {
+    this.state.results = [];
   }
 }

@@ -54,7 +54,7 @@ import { Player } from '../../models/player';
             <mat-label>Red</mat-label>
             <input
               matInput
-              (blur)="cardsChanged.emit()"
+              (input)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.red"
@@ -65,7 +65,7 @@ import { Player } from '../../models/player';
             <mat-label>yellow</mat-label>
             <input
               matInput
-              (blur)="cardsChanged.emit()"
+              (input)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.yellow"
@@ -76,7 +76,7 @@ import { Player } from '../../models/player';
             <mat-label>blue</mat-label>
             <input
               matInput
-              (blur)="cardsChanged.emit()"
+              (input)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.blue"
@@ -87,7 +87,7 @@ import { Player } from '../../models/player';
             <mat-label>orange</mat-label>
             <input
               matInput
-              (blur)="cardsChanged.emit()"
+              (input)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.orange"
@@ -98,7 +98,7 @@ import { Player } from '../../models/player';
             <mat-label>white</mat-label>
             <input
               matInput
-              (blur)="cardsChanged.emit()"
+              (input)="cardsChanged.emit()"
               min="0"
               type="number"
               [(ngModel)]="player.cards.white"
