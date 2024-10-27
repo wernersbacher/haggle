@@ -12,9 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RuleSetRegistry } from '../../logic/rules/rule-sets';
 
 /* TODOS:
- * keine doppelten namen?
  * restart game -> invalidate -> dont reset names? -> reset current game
- * results outdated -> hide results
  */
 
 const TAB_INDEX_START = 0;
@@ -46,6 +44,14 @@ const TAB_INDEX_RESULT = 3;
           </mat-card-content>
         </mat-card>
         <div>
+          <button
+            mat-raised-button
+            type="button"
+            (click)="onRemovePlayerClicked()"
+            [disabled]="gameStarted"
+          >
+            Remove
+          </button>
           <button
             mat-raised-button
             type="button"
@@ -170,6 +176,10 @@ export class MainGameComponent {
 
   onAddPlayerClicked() {
     this.playerInput!.addPlayer();
+  }
+
+  onRemovePlayerClicked() {
+    this.playerInput!.removePlayer();
   }
 
   onGameStartClicked() {

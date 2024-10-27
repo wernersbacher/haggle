@@ -44,6 +44,7 @@ import { Player } from '../../models/player';
 export class PlayerInputComponent implements OnInit {
   @Output() isFormValid = new EventEmitter<boolean>();
   @Input() players: Player[] = [];
+  @Input() minPlayerNumber = 2;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -64,6 +65,18 @@ export class PlayerInputComponent implements OnInit {
     { name: 'Michelle' } as PlayerFormData,
     { name: 'Sebastian' } as PlayerFormData,
   ];
+
+  minimumTwoPlayersValidator = (
+    control: AbstractControl
+  ): { [key: string]: boolean } | null => {
+    const formArray = control as FormArray;
+    const nonEmptyNamesCount = formArray.controls.filter(
+      (control) => control.value.name.trim().length > 0
+    ).length;
+    return nonEmptyNamesCount >= this.minPlayerNumber
+      ? null
+      : { minPlayers: true };
+  };
 
   form: FormGroup = this.formBuilder.group({
     players: this.formBuilder.array(
@@ -93,6 +106,12 @@ export class PlayerInputComponent implements OnInit {
     this.playerInputs.push(this.formBuilder.group({ name: '' }));
   }
 
+  removePlayer(): void {
+    if (this.playerInputs.length > this.minPlayerNumber) {
+      this.playerInputs.removeAt(this.playerInputs.length - 1);
+    }
+  }
+
   setPlayers(): void {
     this.playerInputs.controls.forEach((control) => {
       const name = control.value.name;
@@ -100,13 +119,6 @@ export class PlayerInputComponent implements OnInit {
         this.players.push(new Player(control.value.name));
       }
     });
-  }
-
-  minimumTwoPlayersValidator(
-    control: AbstractControl
-  ): { [key: string]: boolean } | null {
-    const formArray = control as FormArray;
-    return formArray.length >= 2 ? null : { minPlayers: true };
   }
 }
 

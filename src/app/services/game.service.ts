@@ -74,8 +74,6 @@ export class GameService {
     return this.state.players.length > 0;
   }
 
-  // TODO: add interface and stuff
-
   calculateResult() {
     let results: CalcResult[] = [];
     this.state.players.forEach((player) => {
