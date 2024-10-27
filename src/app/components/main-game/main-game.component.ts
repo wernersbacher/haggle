@@ -91,8 +91,9 @@ const TAB_INDEX_RESULT = 3;
 
         <app-player-input
           #playerInput
-          *ngIf="!gameStarted"
+          [style.display]="!gameStarted ? '' : 'none'"
           [players]="gameService.state.players"
+          [defaultNames]="defaultNames"
           (isFormValid)="playerFormValid = $event"
         >
         </app-player-input>
@@ -162,6 +163,8 @@ export class MainGameComponent {
   public playerFormValid = false;
   public showResultDetails = false;
 
+  public defaultNames = ['Frank', 'Sabine', 'Johann', 'Michelle'];
+
   public ruleSets = Array.from(RuleSetRegistry.values()).map(
     (ruleSet) => ruleSet
   );
@@ -190,7 +193,12 @@ export class MainGameComponent {
   }
 
   onRestartClicked() {
+    let preset = this.defaultNames;
+    if (this.gameService.state.players.length > 0) {
+      preset = this.gameService.state.players.map((p) => p.name);
+    }
     this.gameService.restartGame();
+    this.playerInput!.preloadLoadPlayers(preset);
   }
 
   navgiateToCardsTab() {

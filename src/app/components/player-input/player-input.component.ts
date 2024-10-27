@@ -25,7 +25,7 @@ import { Player } from '../../models/player';
   ],
   template: `
     <div>
-      <form [formGroup]="form">
+      <form [formGroup]="form!">
         <ng-container
           formArrayName="players"
           *ngFor="let player of playerInputs.controls; index as i"
@@ -45,26 +45,9 @@ export class PlayerInputComponent implements OnInit {
   @Output() isFormValid = new EventEmitter<boolean>();
   @Input() players: Player[] = [];
   @Input() minPlayerNumber = 2;
+  @Input() defaultNames: string[] = [];
 
   constructor(private formBuilder: FormBuilder) {}
-
-  baseData = [
-    { name: 'Sabine' } as PlayerFormData,
-    { name: 'Ernst' } as PlayerFormData,
-    { name: 'Franzi' } as PlayerFormData,
-    { name: 'Hans' } as PlayerFormData,
-    { name: 'Maja' } as PlayerFormData,
-    { name: 'Hannah' } as PlayerFormData,
-    { name: 'Johann' } as PlayerFormData,
-    { name: 'Markus' } as PlayerFormData,
-    { name: 'Manuel' } as PlayerFormData,
-    { name: 'Frieda' } as PlayerFormData,
-    { name: 'Mareike' } as PlayerFormData,
-    { name: 'Patrick' } as PlayerFormData,
-    { name: 'Robin' } as PlayerFormData,
-    { name: 'Michelle' } as PlayerFormData,
-    { name: 'Sebastian' } as PlayerFormData,
-  ];
 
   minimumTwoPlayersValidator = (
     control: AbstractControl
@@ -78,28 +61,34 @@ export class PlayerInputComponent implements OnInit {
       : { minPlayers: true };
   };
 
-  form: FormGroup = this.formBuilder.group({
-    players: this.formBuilder.array(
-      this.baseData.map((player) => this.formBuilder.group(player)),
-      [this.minimumTwoPlayersValidator]
-    ),
-  });
+  form: FormGroup | undefined;
+
+  preloadLoadPlayers(preset: string[]): void {
+    this.form = this.formBuilder.group({
+      players: this.formBuilder.array(
+        preset.map((name) => {
+          return this.formBuilder.group({ name: name } as PlayerFormData);
+        }),
+        [this.minimumTwoPlayersValidator]
+      ),
+    });
+  }
 
   ngOnInit(): void {
-    this.form.valueChanges.subscribe(() => {
-      this.isFormValid.emit(this.form.valid);
+    this.preloadLoadPlayers(this.defaultNames);
+    this.form?.valueChanges.subscribe(() => {
+      this.isFormValid.emit(this.form?.valid);
     });
 
-    this.isFormValid.emit(this.form.valid);
+    this.isFormValid.emit(this.form?.valid);
   }
 
   ngOnDestory(): void {
     // todo: create unsub subject
     this.isFormValid.unsubscribe();
   }
-
   get playerInputs(): FormArray {
-    return this.form.get('players') as FormArray;
+    return this.form?.get('players') as FormArray;
   }
 
   addPlayer(): void {
