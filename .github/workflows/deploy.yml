@@ -38,3 +38,14 @@ jobs:
         port: 22
         uploads: |
           ./dist => ./web/mw95.de/haggle
+
+    - name: "Deploy"
+      uses: milanmk/actions-file-deployer@master
+      with:
+        remote-protocol: "sftp"
+        remote-host: ${{secrets.SERVER_ADDRESS}}
+        remote-user: ${{secrets.SERVER_USER}}
+        remote-password: ${{secrets.SERVER_PASSWORD}}
+        remote-path: "/web/mw95.de/haggle"
+        local-path: "./dist"
+        artifacts: true
