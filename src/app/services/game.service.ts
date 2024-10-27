@@ -16,7 +16,7 @@ import { RuleSetRegistry } from '../logic/rules/rule-sets';
 function getDefaultState() {
   return {
     seed: '',
-    ruleSetName: Array.from(RuleSetRegistry.values())[0].name, // first element is default - should be the same as on ui
+    ruleSetName: Array.from(RuleSetRegistry.values())[0].name,
     players: [],
     results: [],
   };
@@ -51,7 +51,11 @@ export class GameService {
   }
 
   restartGame() {
-    this.state = { ...getDefaultState(), seed: this.state.seed };
+    this.state = {
+      ...getDefaultState(),
+      seed: this.state.seed,
+      ruleSetName: this.state.ruleSetName,
+    };
   }
 
   startGame(seed: string = '') {

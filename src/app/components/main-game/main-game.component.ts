@@ -80,7 +80,7 @@ const TAB_INDEX_RESULT = 3;
         <mat-form-field *ngIf="!gameStarted">
           <mat-label>Ruleset</mat-label>
           <mat-select
-            [value]="ruleSets[0].name"
+            [value]="gameService.state.ruleSetName"
             (selectionChange)="gameService.state.ruleSetName = $event.value"
           >
             @for (ruleSet of ruleSets; track ruleSet) {
