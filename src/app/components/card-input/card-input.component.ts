@@ -44,9 +44,7 @@ import { Player } from '../../models/player';
       <mat-card class="rule-card" *ngFor="let player of players; let i = index">
         <mat-card-header>
           <mat-card-title-group>
-            <mat-card-title
-              >Player {{ i + 1 }}'s Cards ({{ player.name }})</mat-card-title
-            >
+            <mat-card-title>{{ player.name }} Cards</mat-card-title>
           </mat-card-title-group>
         </mat-card-header>
         <mat-card-content>

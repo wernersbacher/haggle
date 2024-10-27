@@ -29,9 +29,7 @@ import { Player } from '../../models/player';
         <mat-card class="rule-card">
           <mat-card-header>
             <mat-card-title-group>
-              <mat-card-title
-                >Player {{ i + 1 }}'s Rules ({{ player.name }})</mat-card-title
-              >
+              <mat-card-title>{{ player.name }} Rules</mat-card-title>
             </mat-card-title-group>
           </mat-card-header>
           <mat-card-content>

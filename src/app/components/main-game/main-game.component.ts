@@ -47,6 +47,7 @@ const TAB_INDEX_RESULT = 3;
           <button
             mat-raised-button
             type="button"
+            color="secondary"
             (click)="onRemovePlayerClicked()"
             [disabled]="gameStarted"
           >
@@ -55,6 +56,7 @@ const TAB_INDEX_RESULT = 3;
           <button
             mat-raised-button
             type="button"
+            color="secondary"
             (click)="onAddPlayerClicked()"
             [disabled]="gameStarted"
           >
@@ -62,14 +64,18 @@ const TAB_INDEX_RESULT = 3;
           </button>
           <button
             mat-raised-button
+            *ngIf="!gameStarted"
+            color="primary"
             (click)="onGameStartClicked()"
-            [disabled]="!playerFormValid || gameStarted"
+            [disabled]="!playerFormValid"
           >
             Start Game
           </button>
 
           <button
             mat-raised-button
+            *ngIf="gameStarted"
+            color="primary"
             (click)="onRestartClicked()"
             [disabled]="!gameStarted"
           >
@@ -107,7 +113,11 @@ const TAB_INDEX_RESULT = 3;
             </h3></mat-card-content
           >
         </mat-card>
-        <button mat-raised-button (click)="navgiateToCardsTab()">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="navgiateToCardsTab()"
+        >
           Okay, now type in the players cards
         </button>
         <app-game-rules
@@ -122,7 +132,7 @@ const TAB_INDEX_RESULT = 3;
             ><h3>Type in every players' cards</h3></mat-card-content
           >
         </mat-card>
-        <button mat-raised-button (click)="calculateResult()">
+        <button mat-raised-button color="primary" (click)="calculateResult()">
           Calculate Results!
         </button>
         <app-card-input
@@ -134,8 +144,16 @@ const TAB_INDEX_RESULT = 3;
       <mat-tab label="Results" [disabled]="!getGameFinished">
         <!-- results tab -->
 
+        <mat-card appearance="outlined">
+          <mat-card-content
+            ><h3>
+              Game has finished - toggle details if you like to get more infos!
+            </h3></mat-card-content
+          >
+        </mat-card>
         <button
           mat-raised-button
+          color="primary"
           (click)="showResultDetails = !showResultDetails"
         >
           Toggle detailed view
