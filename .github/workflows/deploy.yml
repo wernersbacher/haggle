@@ -39,4 +39,4 @@ jobs:
         remote-path: "/web/mw95.de/haggle"
         local-path: "./dist"
         artifacts: true
-        snyc: full
+        sync: full
