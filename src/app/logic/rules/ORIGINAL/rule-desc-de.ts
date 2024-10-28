@@ -2,7 +2,6 @@ import { Dictionary } from '../../../helper/dictionary';
 import { GameRule } from '../../../models/rule';
 import { RuleDescription } from '../../../models/rule-desc';
 
-// todo: move to map
 export const RULE_RESULT_EXPLANATION_DE: Dictionary<RuleDescription> = {};
 
 /**
@@ -96,7 +95,7 @@ export const RULE_HANDEDOUT_DE: GameRule[] = [
   {
     shortname: 'rule3',
     description:
-      'Blaue Karten haben doppelt so viel Wert wie gelbe und halb so viel wie orange',
+      'Blaue Karten haben doppelt so viel Wert wie gelbe und halb so viel wie orangene',
   },
   {
     shortname: 'rule4',
