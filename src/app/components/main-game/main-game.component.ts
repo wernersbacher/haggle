@@ -110,6 +110,11 @@ const TAB_INDEX_RESULT = 3;
           </mat-card-header>
           <mat-card-content>
             {{ generalGameRules }}
+
+            <a
+              href="https://boardgamegeek.com/filepage/43164/haggle-rule-set-sid-sacksons-original-v10"
+              >Haggle to BGG including rules</a
+            >
           </mat-card-content>
         </mat-card>
       </mat-tab>
@@ -139,7 +144,10 @@ const TAB_INDEX_RESULT = 3;
         <!-- cards tab -->
         <mat-card appearance="outlined">
           <mat-card-content
-            ><h3>Type in every players' cards</h3></mat-card-content
+            ><h3>
+              Every player gets random amount of colored cards, 10 each. After
+              haggling, type in every players' cards.
+            </h3></mat-card-content
           >
         </mat-card>
         <button mat-raised-button color="primary" (click)="calculateResult()">
