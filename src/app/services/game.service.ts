@@ -44,6 +44,8 @@ export class GameService {
       return new Player(playerData.name, playerData.rules, cards);
     });
     this.state = state;
+
+    this.currentRuleSet = RuleSetRegistry.get(this.state.ruleSetName);
   }
 
   saveGameState(): void {

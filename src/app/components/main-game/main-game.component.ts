@@ -103,6 +103,15 @@ const TAB_INDEX_RESULT = 3;
           (isFormValid)="playerFormValid = $event"
         >
         </app-player-input>
+
+        <mat-card appearance="outlined" color="primary">
+          <mat-card-header>
+            <mat-card-title>Game rules</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            {{ generalGameRules }}
+          </mat-card-content>
+        </mat-card>
       </mat-tab>
       <mat-tab label="Rules" [disabled]="!gameStarted">
         <!-- rules tab -->
@@ -123,6 +132,7 @@ const TAB_INDEX_RESULT = 3;
         <app-game-rules
           *ngIf="gameStarted"
           [players]="gameService.state.players"
+          [completeRuleList]="gameService.currentRuleSet"
         ></app-game-rules>
       </mat-tab>
       <mat-tab label="Cards" [disabled]="!gameStarted">
@@ -181,6 +191,7 @@ export class MainGameComponent {
   public playerFormValid = false;
   public showResultDetails = false;
 
+  public generalGameRules: string = generalGameRules;
   public defaultNames = ['Frank', 'Sabine', 'Johann', 'Michelle'];
 
   public ruleSets = Array.from(RuleSetRegistry.values()).map(
@@ -234,3 +245,11 @@ export class MainGameComponent {
     this.gameService.saveGameState();
   }
 }
+
+const generalGameRules = `
+Haggle is a group/party game. The more players, the better. 
+The game is about trading cards with each other.
+Each player starts with a set of cards and the goal is to negotiate and trade these cards with other players to achieve the best possible hand. 
+The points are calculated at the end of the game and the player with the highest score wins.
+The calculation is based on a set of rules. The fun part is that players do only know some rules, and players do not only trade cards but also rules.
+`;
