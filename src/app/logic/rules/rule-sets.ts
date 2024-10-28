@@ -2,10 +2,7 @@ import { Dictionary } from '../../helper/dictionary';
 import { PlayerCards } from '../../models/player-cards';
 import { GameRule } from '../../models/rule';
 import { RuleResult } from '../../models/rules-types';
-import {
-  RULESET_ORIGINAL_DE,
-  RULESET_ORIGINAL_EN,
-} from './ORIGINAL_EN/manifest';
+import { RULESET_ORIGINAL_DE, RULESET_ORIGINAL_EN } from './ORIGINAL/manifest';
 
 export interface RuleSet {
   name: string;

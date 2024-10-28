@@ -6,7 +6,7 @@ import { generateRandomSeed } from '../helper/seed';
 import {
   calculateTotalPoints,
   evaluateAllRules,
-} from '../logic/rules/ORIGINAL_EN/rules';
+} from '../logic/rules/ORIGINAL/rules';
 import { CalcResult } from '../models/calc-result';
 import { GameState } from '../models/game-state';
 import { StateService } from './state-service';
