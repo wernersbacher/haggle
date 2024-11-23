@@ -1,6 +1,6 @@
 # Haggle
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.10.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.10. Its for playing [Haggle](https://boardgamegeek.com/boardgame/17529/haggle) with currently the original ruleset.
 
 ## Development server
 
